@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "567732583390",
+    "firebase_url": "https://youresta-b0db1.firebaseio.com",
+    "project_id": "youresta-b0db1",
+    "storage_bucket": "youresta-b0db1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:567732583390:android:acb6a60f5ce9733971fb4f",
+        "android_client_info": {
+          "package_name": "com.easy.youresta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "567732583390-dog43msrchc5pf21ftqmpu142vfj7i8f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.easy.youresta",
+            "certificate_hash": "5133f95aa954326f1622f9934792fe777243448e"
+          }
+        },
+        {
+          "client_id": "567732583390-7fgpmmcl6kbnpo7i7190i6j1civh0um4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCx7ocDx93zFVt79gIdP9wtb15IkrSBpYk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "567732583390-7fgpmmcl6kbnpo7i7190i6j1civh0um4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

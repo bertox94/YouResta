@@ -24,7 +24,6 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
 
     final EmailField = TextFormField(
         validator: (val) => val.isEmpty ? 'Enter an email' : null,
@@ -63,7 +62,6 @@ class _SignInState extends State<SignIn> {
     return loading
         ? Loading()
         : Scaffold(
-            backgroundColor: Colors.yellow[10],
             body: Container(
               decoration: BoxDecoration(
                 // Box decoration takes a gradient

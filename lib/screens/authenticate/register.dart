@@ -61,7 +61,6 @@ class _RegisterState extends State<Register> {
     return loading
         ? Loading()
         : Scaffold(
-            backgroundColor: Colors.yellow[10],
             body: Container(
               decoration: BoxDecoration(
                 // Box decoration takes a gradient

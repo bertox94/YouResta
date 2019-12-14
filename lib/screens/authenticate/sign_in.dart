@@ -98,9 +98,9 @@ class _SignInState extends State<SignIn> {
                     ),
                     SizedBox(height: 10.0),
                     EmailField,
-                    SizedBox(height: 20.0),
+                    //SizedBox(height: 20.0),
                     PasswordField,
-                    SizedBox(height: 40.0),
+                    SizedBox(height: 20.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
@@ -138,7 +138,7 @@ class _SignInState extends State<SignIn> {
                             )),
                       ],
                     ),
-                    SizedBox(height: 12.0),
+                    SizedBox(height: 5.0),
                     Text(
                       error,
                       style: TextStyle(color: Colors.red, fontSize: 14.0),

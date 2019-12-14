@@ -1,12 +1,13 @@
 import 'package:youresta/models/brew.dart';
-import 'package:youresta/screens/home/brew_list.dart';
 import 'package:youresta/screens/home/settings_form.dart';
 import 'package:youresta/services/auth.dart';
 import 'package:youresta/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class Home extends StatelessWidget {
+import 'brew_list.dart';
+
+class HomeBusiness extends StatelessWidget {
   final AuthService _auth = AuthService();
 
   @override

@@ -17,6 +17,7 @@ class _RegisterState extends State<Register> {
   final _formKey = GlobalKey<FormState>();
   String error = '';
   bool loading = false;
+  bool isBusiness = false;
 
   // text field state
   String email = '';
@@ -84,21 +85,27 @@ class _RegisterState extends State<Register> {
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
-                    SizedBox(
-                      height: 25.0,
-                      child: Text(
-                        'Register here!',
-                        style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.red,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    SizedBox(height: 10.0),
                     EmailField,
                     //SizedBox(height: 20.0),
                     PasswordField,
-                    SizedBox(height: 20.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Checkbox(
+                          value: isBusiness,
+                          onChanged: (bool value) {
+                            setState(() {
+                              isBusiness = value;
+                            });
+                          },
+                        ),
+                        Text(
+                          "Register as a Restaurant Owner",
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                    //SizedBox(height: 20.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
@@ -119,7 +126,7 @@ class _RegisterState extends State<Register> {
                                   setState(() => loading = true);
                                   dynamic result =
                                       await _auth.registerWithEmailAndPassword(
-                                          email, password);
+                                          email, password, isBusiness);
                                   if (result == null) {
                                     setState(() {
                                       loading = false;

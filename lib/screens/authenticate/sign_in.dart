@@ -24,7 +24,6 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-
     final EmailField = TextFormField(
         validator: (val) => val.isEmpty ? 'Enter an email' : null,
         onChanged: (val) {
@@ -85,18 +84,6 @@ class _SignInState extends State<SignIn> {
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
-                    //SizedBox(height: 10.0),
-                    SizedBox(
-                      height: 25.0,
-                      child: Text(
-                        'Sign in here!',
-                        style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.red,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    SizedBox(height: 10.0),
                     EmailField,
                     //SizedBox(height: 20.0),
                     PasswordField,
@@ -138,7 +125,6 @@ class _SignInState extends State<SignIn> {
                             )),
                       ],
                     ),
-                    SizedBox(height: 5.0),
                     Text(
                       error,
                       style: TextStyle(color: Colors.red, fontSize: 14.0),

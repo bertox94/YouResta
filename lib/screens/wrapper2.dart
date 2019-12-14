@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:youresta/models/custom_user.dart';
 import 'package:youresta/models/user.dart';
 import 'package:youresta/screens/authenticate/authenticate.dart';
@@ -12,21 +13,49 @@ class Wrapper2 extends StatelessWidget {
 
   Wrapper2({this.user});
 
+  Widget _buildList(BuildContext context, DocumentSnapshot document) {
+    return ListTile(
+      title: Text(document['isBusiness'].toString()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<CustomUser>(
-        stream: CustomUserManager(uid: user.uid).userData,
+    return Scaffold(
+      appBar: AppBar(title: Text("StreamBuilder with FireStore")),
+      body: StreamBuilder(
+        stream: Firestore.instance.collection('custom_users').snapshots(),
+        //print an integer every 2secs, 10 times
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            CustomUser userData = snapshot.data;
-            if (userData.isBusiness) {
-              return Text('Business');
-            } else {
-              return Text('NonBusiness');
-            }
+          var documents = snapshot.data.documents;
+          var selected;
+
+          if (!snapshot.hasData) {
+            return Text("Loading..");
           } else {
-            return Home();
+            print('\n');
+            print(snapshot
+                .toString()); //AsyncSnapshot<QuerySnapshot>(ConnectionState.active, Instance of 'QuerySnapshot', null)
+            print(snapshot.data.toString()); //Instance of 'QuerySnapshot'
+            print(snapshot.data.documents
+                .toString()); //[Instance of 'DocumentSnapshot']
+            print(snapshot.data.documents[0]
+                .toString()); //Instance of 'DocumentSnapshot'
+            print('\n');
+
+            for (int i = 0; i < documents.length; i++) {
+              print(documents[i]['uid']);
+              if (documents[i]['uid'] == user.uid) {
+                print(documents[i]['uid']);
+                selected = documents[i];
+              }
+            }
           }
-        });
+
+          return Text(selected['isBusiness'].toString());
+          //return Text(selected['isBusiness'].toString());
+        },
+      ),
+    );
   }
 }

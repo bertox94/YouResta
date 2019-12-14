@@ -25,15 +25,15 @@ class Home extends StatelessWidget {
     return StreamProvider<List<Brew>>.value(
       value: DatabaseService().brews,
       child: Scaffold(
-        backgroundColor: Colors.brown[50],
+        backgroundColor: Colors.orange,
         appBar: AppBar(
-          title: Text('Brew Crew'),
-          backgroundColor: Colors.brown[400],
+          title: Text('YouResta'),
+          backgroundColor: Colors.deepOrange,
           elevation: 0.0,
           actions: <Widget>[
             FlatButton.icon(
               icon: Icon(Icons.settings),
-              label: Text(''),
+              label: Text('Settings'),
               onPressed: () => _showSettingsPanel(),
             ),
             FlatButton.icon(

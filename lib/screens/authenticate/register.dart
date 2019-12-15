@@ -25,6 +25,22 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
+    final NameField = TextFormField(
+        validator: (val) => val.isEmpty ? 'This name is not available' : null,
+        onChanged: (val) {
+          setState(() => email = val);
+        },
+        obscureText: false,
+        style: TextStyle(
+            fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white),
+        decoration: InputDecoration(
+          icon: new Icon(Icons.person),
+          //contentPadding: EdgeInsets.fromLTRB(10.0, 15.0, 20.0, 15.0),
+          hintText: 'User/Restaurant name',
+          hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
+          //border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+        ));
+
     final EmailField = TextFormField(
         validator: (val) => val.isEmpty ? 'Enter an email' : null,
         onChanged: (val) {
@@ -80,13 +96,19 @@ class _RegisterState extends State<Register> {
                   ],
                 ),
               ),
-              padding: EdgeInsets.symmetric(vertical: 40.0, horizontal: 50.0),
+              padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 50.0),
               child: Form(
                 key: _formKey,
-                child: Column(
+                child: ListView(
                   children: <Widget>[
-                    EmailField,
+                    Container(
+                        child: Image.asset(
+                      'assets/logo.png',
+                      scale: 5,
+                    )),
                     //SizedBox(height: 20.0),
+                    NameField,
+                    EmailField,
                     PasswordField,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

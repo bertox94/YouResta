@@ -27,7 +27,13 @@ class HomeCustomer extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.orange,
         appBar: AppBar(
-          title: Text('YouResta'),
+          title: Container(
+            child: Row(
+              children: <Widget>[
+                Image.asset('assets/logo.png',scale: 40,),
+              ],
+            ),
+          ),
           backgroundColor: Colors.deepOrange,
           elevation: 0.0,
           actions: <Widget>[

@@ -6,7 +6,7 @@ import 'package:youresta/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class Home extends StatelessWidget {
+class HomeCustomer extends StatelessWidget {
   final AuthService _auth = AuthService();
 
   @override
@@ -27,7 +27,13 @@ class Home extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.orange,
         appBar: AppBar(
-          title: Text('YouResta'),
+          title: Container(
+            child: Row(
+              children: <Widget>[
+                Image.asset('assets/logo.png',scale: 40,),
+              ],
+            ),
+          ),
           backgroundColor: Colors.deepOrange,
           elevation: 0.0,
           actions: <Widget>[

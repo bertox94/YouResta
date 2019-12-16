@@ -113,7 +113,7 @@ class _RegisterState extends State<Register> {
         child: Scrollbar(
           child: ListView(
             children: <Widget>[
-              SizedBox(height: 240.0),
+              SizedBox(height: 235.0),
               NameField,
               EmailField,
               PasswordField,
@@ -179,7 +179,7 @@ class _RegisterState extends State<Register> {
                   )
                 ],
               ),
-              SizedBox(height: 10.0),
+              //SizedBox(height: 10.0),
             ],
           ),
         ));

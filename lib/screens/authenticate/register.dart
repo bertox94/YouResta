@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:youresta/models/custom_user.dart';
 import 'package:youresta/services/auth.dart';
 import 'package:youresta/shared/constants.dart';
 import 'package:youresta/shared/loading.dart';
@@ -26,21 +28,48 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
-    final NameField = TextFormField(
-        validator: (val) => val.isEmpty ? 'This name is not available' : null,
-        onChanged: (val) {
-          setState(() => name = val);
-        },
-        obscureText: false,
-        style: TextStyle(
-            fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white),
-        decoration: InputDecoration(
-          icon: new Icon(Icons.person),
-          //contentPadding: EdgeInsets.fromLTRB(10.0, 15.0, 20.0, 15.0),
-          hintText: 'User/Restaurant name',
-          hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
-          //border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-        ));
+    CustomUser buildItem(DocumentSnapshot doc) {
+      return new CustomUser(
+          uid: doc.data['uid'],
+          name: doc.data['name'],
+          isBusiness: doc.data['isBusiness']);
+    }
+
+    final NameField = StreamBuilder(
+      stream: Firestore.instance.collection('custom_users').snapshots(),
+      builder: (context, snapshot) {
+          if (snapshot.hasData) {
+          List customUsers =
+          snapshot.data.documents.map((doc) => buildItem(doc)).toList();
+
+          return TextFormField(
+              validator: (value) {
+                for (int i = 0; i < customUsers.length; i++) {
+                  if (value == customUsers.elementAt(i).name)
+                    return 'This name is not available';
+                }
+                return null;
+              },
+              onChanged: (val) {
+                setState(() => name = val);
+              },
+              obscureText: false,
+              style: TextStyle(
+                  fontFamily: 'Montserrat',
+                  fontSize: 20.0,
+                  color: Colors.white),
+              decoration: InputDecoration(
+                icon: new Icon(Icons.person),
+                //contentPadding: EdgeInsets.fromLTRB(10.0, 15.0, 20.0, 15.0),
+                hintText: 'User/Restaurant name',
+                hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
+                //border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+              ));
+        } else {
+          return Loading();
+        }
+      },
+    );
 
     final EmailField = TextFormField(
         validator: (val) => val.isEmpty ? 'Enter an email' : null,

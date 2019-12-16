@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:youresta/services/auth.dart';
 
 class HomeBusiness extends StatefulWidget {
   @override
@@ -9,6 +10,7 @@ class HomeBusiness extends StatefulWidget {
 }
 
 class HomeBusinessState extends State<HomeBusiness> {
+  final AuthService _auth = AuthService();
   String id;
   final db = Firestore.instance;
   final _formKey = GlobalKey<FormState>();
@@ -74,8 +76,29 @@ class HomeBusinessState extends State<HomeBusiness> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.orange,
       appBar: AppBar(
-        title: Text('Firestore CRUD'),
+        title: Container(
+          child: Row(
+            children: <Widget>[
+              Image.asset(
+                'assets/logo.png',
+                scale: 40,
+              ),
+            ],
+          ),
+        ),
+        backgroundColor: Colors.deepOrange,
+        elevation: 0.0,
+        actions: <Widget>[
+          FlatButton.icon(
+            label: Text('Log Out'),
+            onPressed: () async {
+              await _auth.signOut();
+            },
+            icon: Icon(Icons.exit_to_app),
+          ),
+        ],
       ),
       body: ListView(
         padding: EdgeInsets.all(8),

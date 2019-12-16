@@ -1,4 +1,5 @@
 import 'package:youresta/models/user.dart';
+import 'package:youresta/services/custom_user_manager.dart';
 import 'package:youresta/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -42,14 +43,14 @@ class AuthService {
 
   // register with email and password
   Future registerWithEmailAndPassword(
-      String email, String password, bool isBusiness) async {
+      String email, String password, String name, bool isBusiness) async {
     try {
       AuthResult result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = result.user;
       // register the user in custom users with isBusiness
-      await DatabaseService(uid: user.uid)
-          .updateUserData('0', 'new crew member', 100);
+      await CustomUserManager(uid: user.uid)
+          .updateUserData(name, isBusiness);
       return _userFromFirebaseUser(user);
     } catch (error) {
       print(error.toString());

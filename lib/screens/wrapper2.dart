@@ -30,7 +30,7 @@ class Wrapper2 extends StatelessWidget {
           }
 
           if (selected == null) {
-            throw new Exception('Something went wrong :(');
+            throw new Exception('\nSomething went wrong :(');
           } else if (selected['isBusiness']) {
             return HomeBusiness();
           } else {

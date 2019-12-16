@@ -10,11 +10,12 @@ class CustomUserManager {
   CustomUserManager({this.uid});
 
   // collection reference
-  final CollectionReference customUserCollection =
-      Firestore.instance.collection('custom_users');
+  final CollectionReference customUserCollection =      Firestore.instance.collection('custom_users');
 
-  Future<void> updateUserData(bool isBusiness) async {
+  Future<void> updateUserData(String name, bool isBusiness) async {
     return await customUserCollection.document(uid).setData({
+      'uid': uid,
+      'name': name,
       'isBusiness': isBusiness,
     });
   }

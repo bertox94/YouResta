@@ -22,13 +22,14 @@ class _RegisterState extends State<Register> {
   // text field state
   String email = '';
   String password = '';
+  String name = '';
 
   @override
   Widget build(BuildContext context) {
     final NameField = TextFormField(
         validator: (val) => val.isEmpty ? 'This name is not available' : null,
         onChanged: (val) {
-          setState(() => email = val);
+          setState(() => name = val);
         },
         obscureText: false,
         style: TextStyle(
@@ -121,7 +122,7 @@ class _RegisterState extends State<Register> {
                             setState(() => loading = true);
                             dynamic result =
                                 await _auth.registerWithEmailAndPassword(
-                                    email, password, isBusiness);
+                                    email, password, name, isBusiness);
                             if (result == null) {
                               setState(() {
                                 loading = false;

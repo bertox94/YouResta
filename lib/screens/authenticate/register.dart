@@ -38,12 +38,15 @@ class _RegisterState extends State<Register> {
     final NameField = StreamBuilder(
       stream: Firestore.instance.collection('custom_users').snapshots(),
       builder: (context, snapshot) {
-          if (snapshot.hasData) {
+        if (snapshot.hasData) {
           List customUsers =
-          snapshot.data.documents.map((doc) => buildItem(doc)).toList();
+              snapshot.data.documents.map((doc) => buildItem(doc)).toList();
 
           return TextFormField(
               validator: (value) {
+                if (value == '') {
+                  return 'The name must not be empty';
+                }
                 for (int i = 0; i < customUsers.length; i++) {
                   if (value == customUsers.elementAt(i).name)
                     return 'This name is not available';

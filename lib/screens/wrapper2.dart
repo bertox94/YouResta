@@ -15,7 +15,6 @@ class Wrapper2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: Firestore.instance.collection('custom_users').snapshots(),
-      //print an integer every 2secs, 10 times
       builder: (context, snapshot) {
         var selected;
 

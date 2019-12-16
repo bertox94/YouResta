@@ -1,60 +1,167 @@
-import 'package:youresta/models/brew.dart';
-import 'package:youresta/screens/home/settings_form.dart';
-import 'package:youresta/services/auth.dart';
-import 'package:youresta/services/database.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'brew_list.dart';
+class HomeBusiness extends StatefulWidget {
+  @override
+  HomeBusinessState createState() {
+    return HomeBusinessState();
+  }
+}
 
-class HomeBusiness extends StatelessWidget {
-  final AuthService _auth = AuthService();
+class HomeBusinessState extends State<HomeBusiness> {
+  String id;
+  final db = Firestore.instance;
+  final _formKey = GlobalKey<FormState>();
+  String name;
+  int randomNumber = -1;
+
+  Card buildItem(DocumentSnapshot doc) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              'name: ${doc.data['name']}',
+              style: TextStyle(fontSize: 24),
+            ),
+            Text(
+              'todo: ${doc.data['todo']}',
+              style: TextStyle(fontSize: 20),
+            ),
+            SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                FlatButton(
+                  onPressed: () => updateData(doc),
+                  child: Text('Update todo',
+                      style: TextStyle(color: Colors.white)),
+                  color: Colors.green,
+                ),
+                SizedBox(width: 8),
+                FlatButton(
+                  onPressed: () => deleteData(doc),
+                  child: Text('Delete'),
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  TextFormField buildTextFormField() {
+    return TextFormField(
+      decoration: InputDecoration(
+        border: InputBorder.none,
+        hintText: 'name',
+        fillColor: Colors.grey[300],
+        filled: true,
+      ),
+      validator: (value) {
+        if (value.isEmpty) {
+          return 'Please enter some text';
+        }
+      },
+      onSaved: (value) => name = value,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    void _showSettingsPanel() {
-      showModalBottomSheet(
-          context: context,
-          builder: (context) {
-            return Container(
-              padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
-              child: SettingsForm(),
-            );
-          });
-    }
-
-    return StreamProvider<List<Brew>>.value(
-      value: DatabaseService().brews,
-      child: Scaffold(
-        backgroundColor: Colors.orange,
-        appBar: AppBar(
-          title: Text('YouResta'),
-          backgroundColor: Colors.deepOrange,
-          elevation: 0.0,
-          actions: <Widget>[
-            FlatButton.icon(
-              icon: Icon(Icons.settings),
-              label: Text('Settings'),
-              onPressed: () => _showSettingsPanel(),
-            ),
-            FlatButton.icon(
-              label: Text('Log Out'),
-              onPressed: () async {
-                await _auth.signOut();
-              },
-              icon: Icon(Icons.exit_to_app),
-            ),
-          ],
-        ),
-        body: Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/coffee_bg.png'),
-                fit: BoxFit.cover,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Firestore CRUD'),
+      ),
+      body: ListView(
+        padding: EdgeInsets.all(8),
+        children: <Widget>[
+          Form(
+            key: _formKey,
+            child: buildTextFormField(),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              RaisedButton(
+                onPressed: createData,
+                child: Text('Create', style: TextStyle(color: Colors.white)),
+                color: Colors.green,
               ),
-            ),
-            child: BrewList()),
+              RaisedButton(
+                onPressed: id != null ? readData : null,
+                child: Text('Read', style: TextStyle(color: Colors.white)),
+                color: Colors.blue,
+              ),
+            ],
+          ),
+          StreamBuilder<QuerySnapshot>(
+            stream: db.collection('CRUD').snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Column(
+                    children: snapshot.data.documents
+                        .map((doc) => buildItem(doc))
+                        .toList());
+              } else {
+                return SizedBox();
+              }
+            },
+          )
+        ],
       ),
     );
+  }
+
+  void createData() async {
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+      DocumentReference ref = await db
+          .collection('CRUD')
+          .add({'name': '$name 😎', 'todo': randomTodo()});
+      setState(() => id = ref.documentID);
+      print(ref.documentID);
+    }
+  }
+
+  void readData() async {
+    DocumentSnapshot snapshot = await db.collection('CRUD').document(id).get();
+    print(snapshot.data['name']);
+  }
+
+  void updateData(DocumentSnapshot doc) async {
+    await db
+        .collection('CRUD')
+        .document(doc.documentID)
+        .updateData({'todo': 'please 🤫'});
+  }
+
+  void deleteData(DocumentSnapshot doc) async {
+    await db.collection('CRUD').document(doc.documentID).delete();
+    setState(() => id = null);
+  }
+
+  String randomTodo() {
+    randomNumber++;
+    randomNumber %= 4;
+    String todo;
+    switch (randomNumber) {
+      case 0:
+        todo = 'Like and subscribe 💩';
+        break;
+      case 1:
+        todo = 'Twitter @robertbrunhage 🤣';
+        break;
+      case 2:
+        todo = 'Patreon in the description 🤗';
+        break;
+      case 3:
+        todo = 'Leave a comment 🤓';
+        break;
+    }
+    return todo;
   }
 }

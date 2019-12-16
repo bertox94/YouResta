@@ -76,79 +76,80 @@ class _RegisterState extends State<Register> {
     );
 
     final FormField = Form(
-      key: _formKey,
-      child: ListView(
-        children: <Widget>[
-          SizedBox(height: 240.0),
-          NameField,
-          EmailField,
-          PasswordField,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+        key: _formKey,
+        child: Scrollbar(
+          child: ListView(
             children: <Widget>[
-              Checkbox(
-                value: isBusiness,
-                onChanged: (bool value) {
-                  setState(() {
-                    isBusiness = value;
-                  });
-                },
-              ),
-              Text(
-                "Register as a Restaurant Owner",
-                style: TextStyle(color: Colors.white),
-              ),
-            ],
-          ),
-          //SizedBox(height: 20.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              SizedBox(
-                  width: 120,
-                  child: RaisedButton(
-                    onPressed: () => widget.toggleView(),
-                    child: Text("Log In", style: TextStyle(fontSize: 20)),
-                    color: Colors.orange,
-                    textColor: Colors.white,
-                  )),
-              SizedBox(
-                  width: 120,
-                  child: RaisedButton(
-                    onPressed: () async {
-                      if (_formKey.currentState.validate()) {
-                        setState(() => loading = true);
-                        dynamic result =
-                            await _auth.registerWithEmailAndPassword(
-                                email, password, isBusiness);
-                        if (result == null) {
-                          setState(() {
-                            loading = false;
-                            error = 'Please supply a valid email';
-                          });
-                        }
-                      }
+              SizedBox(height: 240.0),
+              NameField,
+              EmailField,
+              PasswordField,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Checkbox(
+                    value: isBusiness,
+                    onChanged: (bool value) {
+                      setState(() {
+                        isBusiness = value;
+                      });
                     },
-                    child: Text("Register", style: TextStyle(fontSize: 20)),
-                    color: Colors.red,
-                    textColor: Colors.white,
-                  )),
+                  ),
+                  Text(
+                    "Register as a Restaurant Owner",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ],
+              ),
+              //SizedBox(height: 20.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  SizedBox(
+                      width: 120,
+                      child: RaisedButton(
+                        onPressed: () => widget.toggleView(),
+                        child: Text("Log In", style: TextStyle(fontSize: 20)),
+                        color: Colors.orange,
+                        textColor: Colors.white,
+                      )),
+                  SizedBox(
+                      width: 120,
+                      child: RaisedButton(
+                        onPressed: () async {
+                          if (_formKey.currentState.validate()) {
+                            setState(() => loading = true);
+                            dynamic result =
+                                await _auth.registerWithEmailAndPassword(
+                                    email, password, isBusiness);
+                            if (result == null) {
+                              setState(() {
+                                loading = false;
+                                error = 'Please supply a valid email';
+                              });
+                            }
+                          }
+                        },
+                        child: Text("Register", style: TextStyle(fontSize: 20)),
+                        color: Colors.red,
+                        textColor: Colors.white,
+                      )),
+                ],
+              ),
+              SizedBox(height: 5.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    error,
+                    style: TextStyle(color: Colors.red, fontSize: 14.0),
+                  )
+                ],
+              ),
+              SizedBox(height: 10.0),
             ],
           ),
-          SizedBox(height: 5.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                error,
-                style: TextStyle(color: Colors.red, fontSize: 14.0),
-              )
-            ],
-          ),
-          SizedBox(height: 10.0),
-        ],
-      ),
-    );
+        ));
 
     return loading
         ? Loading()

@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:youresta/models/custom_user.dart';
+import 'package:youresta/models/user.dart';
+import 'package:youresta/services/custom_user_manager.dart';
 import 'package:youresta/shared/loading.dart';
 
 import 'home/home_business.dart';
@@ -14,28 +17,18 @@ class Wrapper2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: Firestore.instance.collection('custom_users').snapshots(),
+      stream: CustomUserManager(uid: user.uid).userData,
       builder: (context, snapshot) {
-        var selected;
+        CustomUser customUser = snapshot.data;
 
         if (!snapshot.hasData) {
           return Loading();
+        } else if (snapshot.hasError) {
+          throw new Exception('\nSomething went wrong :(');
+        } else if (customUser.isBusiness) {
+          return HomeBusiness();
         } else {
-          var documents = snapshot.data.documents;
-          for (int i = 0; i < documents.length; i++) {
-            print(documents[i]['uid']);
-            if (documents[i]['uid'] == user.uid) {
-              selected = documents[i];
-            }
-          }
-
-          if (selected == null) {
-            throw new Exception('\nSomething went wrong :(');
-          } else if (selected['isBusiness']) {
-            return HomeBusiness();
-          } else {
-            return HomeCustomer();
-          }
+          return HomeCustomer();
         }
       },
     );

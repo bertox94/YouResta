@@ -10,7 +10,8 @@ class CustomUserManager {
   CustomUserManager({this.uid});
 
   // collection reference
-  final CollectionReference customUserCollection =      Firestore.instance.collection('custom_users');
+  final CollectionReference customUserCollection =
+      Firestore.instance.collection('custom_users');
 
   Future<void> updateUserData(String name, bool isBusiness) async {
     return await customUserCollection.document(uid).setData({
@@ -23,6 +24,10 @@ class CustomUserManager {
   // user data from snapshots
   CustomUser _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return CustomUser(uid: uid, isBusiness: snapshot.data['isBusiness']);
+  }
+
+  Future<void> deleteUser() async {
+    return await customUserCollection.document(uid).delete();
   }
 
   // get user doc stream

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:youresta/screens/home/insert_dish.dart';
 import 'package:youresta/services/auth.dart';
 
 class HomeBusiness extends StatefulWidget {
@@ -76,7 +77,7 @@ class HomeBusinessState extends State<HomeBusiness> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.orange,
+      backgroundColor: Colors.orange[200],
       appBar: AppBar(
         title: Container(
           child: Row(
@@ -91,6 +92,14 @@ class HomeBusinessState extends State<HomeBusiness> {
         backgroundColor: Colors.deepOrange,
         elevation: 0.0,
         actions: <Widget>[
+          FlatButton.icon(
+            label: Text('Add'),
+            onPressed: () async {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => InsertDish()));
+            },
+            icon: Icon(Icons.restaurant_menu),
+          ),
           FlatButton.icon(
             label: Text('Log Out'),
             onPressed: () async {

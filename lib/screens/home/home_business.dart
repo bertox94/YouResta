@@ -19,7 +19,6 @@ class HomeBusiness extends StatefulWidget {
 
 class HomeBusinessState extends State<HomeBusiness> {
   final AuthService _auth = AuthService();
-  String id;
   final db = Firestore.instance;
   final _formKey = GlobalKey<FormState>();
   String name;
@@ -151,11 +150,6 @@ class HomeBusinessState extends State<HomeBusiness> {
                 child: Text('Create', style: TextStyle(color: Colors.white)),
                 color: Colors.green,
               ),
-              RaisedButton(
-                onPressed: id != null ? readData : null,
-                child: Text('Read', style: TextStyle(color: Colors.white)),
-                color: Colors.blue,
-              ),
             ],
           ),
           StreamBuilder<QuerySnapshot>(
@@ -179,15 +173,16 @@ class HomeBusinessState extends State<HomeBusiness> {
   void createData() async {
     if (_formKey.currentState.validate()) {
       DocumentReference ref = await db
-          .collection('CRUD')
+          .collection('dishes')
           .add({'name': '$name 😎', 'todo': randomTodo()});
-      setState(() => id = ref.documentID);
       print(ref.documentID);
     }
   }
 
+  //how to get the element, however remind that you should use streams
   void readData() async {
-    DocumentSnapshot snapshot = await db.collection('CRUD').document(id).get();
+    DocumentSnapshot snapshot =
+        await db.collection('CRUD').document('id').get();
     print(snapshot.data['name']);
   }
 
@@ -199,8 +194,7 @@ class HomeBusinessState extends State<HomeBusiness> {
   }
 
   void deleteData(DocumentSnapshot doc) async {
-    await db.collection('CRUD').document(doc.documentID).delete();
-    setState(() => id = null);
+    await db.collection('dishes').document(doc.documentID).delete();
   }
 
   String randomTodo() {

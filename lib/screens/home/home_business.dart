@@ -1,9 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:youresta/models/dish.dart';
 import 'package:youresta/screens/home/insert_dish.dart';
 import 'package:youresta/services/auth.dart';
 
 class HomeBusiness extends StatefulWidget {
+  final FirebaseUser user;
+
+  HomeBusiness({this.user});
+
   @override
   HomeBusinessState createState() {
     return HomeBusinessState();
@@ -95,8 +101,12 @@ class HomeBusinessState extends State<HomeBusiness> {
           FlatButton.icon(
             label: Text('Add'),
             onPressed: () async {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => InsertDish()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => InsertDish(
+                            user: widget.user,
+                          )));
             },
             icon: Icon(Icons.restaurant_menu),
           ),
@@ -151,7 +161,7 @@ class HomeBusinessState extends State<HomeBusiness> {
 
   void createData() async {
     if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
+      //_formKey.currentState.save();
       DocumentReference ref = await db
           .collection('CRUD')
           .add({'name': '$name 😎', 'todo': randomTodo()});

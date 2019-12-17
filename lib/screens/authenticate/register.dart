@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:youresta/models/custom_user.dart';
+import 'package:youresta/models/dish.dart';
 import 'package:youresta/services/auth.dart';
 import 'package:youresta/shared/constants.dart';
 import 'package:youresta/shared/loading.dart';
@@ -26,6 +27,7 @@ class _RegisterState extends State<Register> {
   String password = '';
   String name = '';
 
+
   @override
   Widget build(BuildContext context) {
     CustomUser buildItem(DocumentSnapshot doc) {
@@ -35,154 +37,163 @@ class _RegisterState extends State<Register> {
           isBusiness: doc.data['isBusiness']);
     }
 
-    final NameField = StreamBuilder(
-      stream: Firestore.instance.collection('custom_users').snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          List customUsers =
-              snapshot.data.documents.map((doc) => buildItem(doc)).toList();
+    StreamBuilder buildName() {
+      return StreamBuilder(
+        stream: Firestore.instance.collection('custom_users').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List customUsers =
+                snapshot.data.documents.map((doc) => buildItem(doc)).toList();
 
-          return TextFormField(
-              validator: (value) {
-                if (value == '') {
-                  return 'The name must not be empty';
-                }
-                for (int i = 0; i < customUsers.length; i++) {
-                  if (value == customUsers.elementAt(i).name)
-                    return 'This name is not available';
-                }
-                return null;
-              },
-              onChanged: (val) {
-                setState(() => name = val);
-              },
-              obscureText: false,
-              style: TextStyle(
-                  fontFamily: 'Montserrat',
-                  fontSize: 20.0,
-                  color: Colors.white),
-              decoration: InputDecoration(
-                icon: new Icon(Icons.person),
-                //contentPadding: EdgeInsets.fromLTRB(10.0, 15.0, 20.0, 15.0),
-                hintText: 'User/Restaurant name',
-                hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
-                //border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-              ));
-        } else {
-          return Loading();
-        }
-      },
-    );
-
-    final EmailField = TextFormField(
-        validator: (val) => val.isEmpty ? 'Enter an email' : null,
-        onChanged: (val) {
-          setState(() => email = val);
+            return TextFormField(
+                validator: (value) {
+                  if (value == '') {
+                    return 'The name must not be empty';
+                  }
+                  for (int i = 0; i < customUsers.length; i++) {
+                    if (value == customUsers.elementAt(i).name)
+                      return 'This name is not available';
+                  }
+                  return null;
+                },
+                onChanged: (val) {
+                  setState(() => name = val);
+                },
+                obscureText: false,
+                style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontSize: 20.0,
+                    color: Colors.white),
+                decoration: InputDecoration(
+                  icon: new Icon(Icons.person),
+                  //contentPadding: EdgeInsets.fromLTRB(10.0, 15.0, 20.0, 15.0),
+                  hintText: 'User/Restaurant name',
+                  hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
+                  //border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+                ));
+          } else {
+            return Loading();
+          }
         },
-        obscureText: false,
+      );
+    }
+
+    TextFormField buildEmail() {
+      return TextFormField(
+          validator: (val) => val.isEmpty ? 'Enter an email' : null,
+          onChanged: (val) {
+            setState(() => email = val);
+          },
+          obscureText: false,
+          style: TextStyle(
+              fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white),
+          decoration: InputDecoration(
+            icon: new Icon(Icons.mail),
+            //contentPadding: EdgeInsets.fromLTRB(10.0, 15.0, 20.0, 15.0),
+            hintText: 'Email',
+            hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
+            //border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+          ));
+    }
+
+    TextFormField buildPassword() {
+      return TextFormField(
+        validator: (val) =>
+            val.length < 6 ? 'Enter a password 6+ chars long' : null,
+        onChanged: (val) {
+          setState(() => password = val);
+        },
+        obscureText: true,
         style: TextStyle(
             fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white),
         decoration: InputDecoration(
-          icon: new Icon(Icons.mail),
-          //contentPadding: EdgeInsets.fromLTRB(10.0, 15.0, 20.0, 15.0),
-          hintText: 'Email',
+          icon: new Icon(Icons.lock),
+          //contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          hintText: "Password",
           hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
-          //border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-        ));
+          //border:OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))
+        ),
+      );
+    }
 
-    final PasswordField = TextFormField(
-      validator: (val) =>
-          val.length < 6 ? 'Enter a password 6+ chars long' : null,
-      onChanged: (val) {
-        setState(() => password = val);
-      },
-      obscureText: true,
-      style: TextStyle(
-          fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white),
-      decoration: InputDecoration(
-        icon: new Icon(Icons.lock),
-        //contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        hintText: "Password",
-        hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
-        //border:OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))
-      ),
-    );
-
-    final FormField = Form(
-        key: _formKey,
-        child: Scrollbar(
-          child: ListView(
-            children: <Widget>[
-              SizedBox(height: 235.0),
-              NameField,
-              EmailField,
-              PasswordField,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Checkbox(
-                    value: isBusiness,
-                    onChanged: (bool value) {
-                      setState(() {
-                        isBusiness = value;
-                      });
-                    },
-                  ),
-                  Text(
-                    "Register as a Restaurant Owner",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ],
-              ),
-              //SizedBox(height: 20.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  SizedBox(
-                      width: 120,
-                      child: RaisedButton(
-                        onPressed: () => widget.toggleView(),
-                        child: Text("Log In", style: TextStyle(fontSize: 20)),
-                        color: Colors.orange,
-                        textColor: Colors.white,
-                      )),
-                  SizedBox(
-                      width: 120,
-                      child: RaisedButton(
-                        onPressed: () async {
-                          if (_formKey.currentState.validate()) {
-                            setState(() => loading = true);
-                            dynamic result =
-                                await _auth.registerWithEmailAndPassword(
-                                    email, password, name, isBusiness);
-                            if (result == null) {
-                              setState(() {
-                                loading = false;
-                                error = 'Please supply a valid email';
-                              });
+    Form buildForm() {
+      return Form(
+          key: _formKey,
+          child: Scrollbar(
+            child: ListView(
+              children: <Widget>[
+                SizedBox(height: 235.0),
+                buildName(),
+                buildEmail(),
+                buildPassword(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Checkbox(
+                      value: isBusiness,
+                      onChanged: (bool value) {
+                        setState(() {
+                          isBusiness = value;
+                        });
+                      },
+                    ),
+                    Text(
+                      "Register as a Restaurant Owner",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+                //SizedBox(height: 20.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    SizedBox(
+                        width: 120,
+                        child: RaisedButton(
+                          onPressed: () => widget.toggleView(),
+                          child: Text("Log In", style: TextStyle(fontSize: 20)),
+                          color: Colors.orange,
+                          textColor: Colors.white,
+                        )),
+                    SizedBox(
+                        width: 120,
+                        child: RaisedButton(
+                          onPressed: () async {
+                            if (_formKey.currentState.validate()) {
+                              setState(() => loading = true);
+                              dynamic result =
+                                  await _auth.registerWithEmailAndPassword(
+                                      email, password, name, isBusiness);
+                              if (result == null) {
+                                setState(() {
+                                  loading = false;
+                                  error = 'Please supply a valid email';
+                                });
+                              }
                             }
-                          }
-                        },
-                        child: Text("Register", style: TextStyle(fontSize: 20)),
-                        color: Colors.red,
-                        textColor: Colors.white,
-                      )),
-                ],
-              ),
-              SizedBox(height: 5.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    error,
-                    style: TextStyle(color: Colors.red, fontSize: 14.0),
-                  )
-                ],
-              ),
-              //SizedBox(height: 10.0),
-            ],
-          ),
-        ));
+                          },
+                          child:
+                              Text("Register", style: TextStyle(fontSize: 20)),
+                          color: Colors.red,
+                          textColor: Colors.white,
+                        )),
+                  ],
+                ),
+                SizedBox(height: 5.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      error,
+                      style: TextStyle(color: Colors.red, fontSize: 14.0),
+                    )
+                  ],
+                ),
+                //SizedBox(height: 10.0),
+              ],
+            ),
+          ));
+    }
 
     return loading
         ? Loading()
@@ -219,7 +230,7 @@ class _RegisterState extends State<Register> {
                           ),
                         )
                       ]),
-                  FormField,
+                  buildForm(),
                 ])),
           );
   }

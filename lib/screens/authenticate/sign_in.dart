@@ -25,97 +25,104 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-    final EmailField = TextFormField(
-        validator: (val) => val.isEmpty ? 'Enter an email' : null,
+    TextFormField buildEmail() {
+      return TextFormField(
+          validator: (val) => val.isEmpty ? 'Enter an email' : null,
+          onChanged: (val) {
+            setState(() => email = val);
+          },
+          obscureText: false,
+          style: TextStyle(
+              fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white),
+          decoration: InputDecoration(
+            icon: new Icon(Icons.mail),
+            //contentPadding: EdgeInsets.fromLTRB(10.0, 15.0, 20.0, 15.0),
+            hintText: 'Email',
+            hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
+            //border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+          ));
+    }
+
+    TextFormField buildPassword() {
+      return TextFormField(
+        validator: (val) =>
+            val.length < 6 ? 'Enter a password 6+ chars long' : null,
         onChanged: (val) {
-          setState(() => email = val);
+          setState(() => password = val);
         },
-        obscureText: false,
+        obscureText: true,
         style: TextStyle(
             fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white),
         decoration: InputDecoration(
-          icon: new Icon(Icons.mail),
-          //contentPadding: EdgeInsets.fromLTRB(10.0, 15.0, 20.0, 15.0),
-          hintText: 'Email',
+          icon: new Icon(Icons.lock),
+          //contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          hintText: "Password",
           hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
-          //border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-        ));
+          //border:OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))
+        ),
+      );
+    }
 
-    final PasswordField = TextFormField(
-      validator: (val) =>
-          val.length < 6 ? 'Enter a password 6+ chars long' : null,
-      onChanged: (val) {
-        setState(() => password = val);
-      },
-      obscureText: true,
-      style: TextStyle(
-          fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white),
-      decoration: InputDecoration(
-        icon: new Icon(Icons.lock),
-        //contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        hintText: "Password",
-        hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
-        //border:OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))
-      ),
-    );
-
-    final FormField = Form(
-        key: _formKey,
-        child: Scrollbar(
-          child: ListView(
-            children: <Widget>[
-              SizedBox(height: 240.0),
-              EmailField,
-              PasswordField,
-              SizedBox(height: 20.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  SizedBox(
-                      width: 120,
-                      child: RaisedButton(
-                        onPressed: () => widget.toggleView(),
-                        child: Text("Register", style: TextStyle(fontSize: 20)),
-                        color: Colors.red,
-                        textColor: Colors.white,
-                      )),
-                  SizedBox(
-                      width: 120,
-                      child: RaisedButton(
-                        onPressed: () async {
-                          if (_formKey.currentState.validate()) {
-                            setState(() => loading = true);
-                            dynamic result = await _auth
-                                .signInWithEmailAndPassword(email, password);
-                            if (result == null) {
-                              setState(() {
-                                loading = false;
-                                error =
-                                    'Could not sign in with those credentials';
-                              });
+    Form buildForm() {
+      return Form(
+          key: _formKey,
+          child: Scrollbar(
+            child: ListView(
+              children: <Widget>[
+                SizedBox(height: 240.0),
+                buildEmail(),
+                buildPassword(),
+                SizedBox(height: 20.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    SizedBox(
+                        width: 120,
+                        child: RaisedButton(
+                          onPressed: () => widget.toggleView(),
+                          child:
+                              Text("Register", style: TextStyle(fontSize: 20)),
+                          color: Colors.red,
+                          textColor: Colors.white,
+                        )),
+                    SizedBox(
+                        width: 120,
+                        child: RaisedButton(
+                          onPressed: () async {
+                            if (_formKey.currentState.validate()) {
+                              setState(() => loading = true);
+                              dynamic result = await _auth
+                                  .signInWithEmailAndPassword(email, password);
+                              if (result == null) {
+                                setState(() {
+                                  loading = false;
+                                  error =
+                                      'Could not sign in with those credentials';
+                                });
+                              }
                             }
-                          }
-                        },
-                        child: Text("Log In", style: TextStyle(fontSize: 20)),
-                        color: Colors.orange,
-                        textColor: Colors.white,
-                      )),
-                ],
-              ),
-              SizedBox(height: 5.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    error,
-                    style: TextStyle(color: Colors.red, fontSize: 14.0),
-                  )
-                ],
-              ),
-              SizedBox(height: 10.0),
-            ],
-          ),
-        ));
+                          },
+                          child: Text("Log In", style: TextStyle(fontSize: 20)),
+                          color: Colors.orange,
+                          textColor: Colors.white,
+                        )),
+                  ],
+                ),
+                SizedBox(height: 5.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      error,
+                      style: TextStyle(color: Colors.red, fontSize: 14.0),
+                    )
+                  ],
+                ),
+                SizedBox(height: 10.0),
+              ],
+            ),
+          ));
+    }
 
     return loading
         ? Loading()
@@ -152,7 +159,7 @@ class _SignInState extends State<SignIn> {
                           ),
                         )
                       ]),
-                  FormField,
+                  buildForm(),
                 ])),
           );
   }

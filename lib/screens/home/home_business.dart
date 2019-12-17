@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:youresta/models/dish.dart';
+import 'package:youresta/models/review.dart';
 import 'package:youresta/screens/home/insert_dish.dart';
 import 'package:youresta/screens/home/update_dish.dart';
 import 'package:youresta/services/auth.dart';
@@ -57,7 +58,13 @@ class HomeBusinessState extends State<HomeBusiness> {
                                     name: doc.data['name'],
                                     owner: doc.data['owner'],
                                     price: doc.data['price'],
-                                    reviews: doc.data['reviews']))));
+                                    reviews: doc.data['reviews']
+                                        .map<Review>((document) {
+                                      return new Review(
+                                          stars: document['stars'],
+                                          who: document['who'],
+                                          text: document['text']);
+                                    }).toList()))));
                   },
                   child: Text('Update todo',
                       style: TextStyle(color: Colors.white)),

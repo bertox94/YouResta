@@ -3,5 +3,5 @@ class Review {
   final String text;
   final String who;
 
-  Review.name({this.stars, this.text, this.who});
+  Review({this.stars, this.text, this.who});
 }

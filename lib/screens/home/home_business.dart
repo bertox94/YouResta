@@ -144,7 +144,7 @@ class HomeBusinessState extends State<HomeBusiness> {
             ],
           ),
           StreamBuilder<QuerySnapshot>(
-            stream: db.collection('CRUD').snapshots(),
+            stream: db.collection('dishes').snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return Column(

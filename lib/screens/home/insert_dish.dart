@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:youresta/models/custom_user.dart';
 import 'package:youresta/models/dish.dart';
 import 'package:youresta/services/auth.dart';
+import 'package:youresta/shared/loading.dart';
 
 class InsertDish extends StatefulWidget {
   final FirebaseUser user;
@@ -53,60 +54,63 @@ class InsertDishState extends State<InsertDish> {
     return StreamBuilder(
         stream: Firestore.instance.collection('custom_users').snapshots(),
         builder: (context, snapshot) {
-          List customUsers =
-              snapshot.data.documents.map((doc) => buildItem(doc)).toList();
+          if (snapshot.hasData) {
+            List customUsers =
+                snapshot.data.documents.map((doc) => buildItem(doc)).toList();
 
-          CustomUser selected;
+            CustomUser selected;
 
-          for (int i = 0; i < customUsers.length; i++) {
-            if (customUsers.elementAt(i).uid == widget.user.uid)
-              selected = customUsers.elementAt(i);
-          }
+            for (int i = 0; i < customUsers.length; i++) {
+              if (customUsers.elementAt(i).uid == widget.user.uid)
+                selected = customUsers.elementAt(i);
+            }
 
-          return Scaffold(
-              backgroundColor: Colors.orange[200],
-              appBar: AppBar(
-                title: Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Image.asset(
-                        'assets/logo.png',
-                        scale: 40,
-                      ),
-                    ],
-                  ),
-                ),
-                backgroundColor: Colors.deepOrange,
-                elevation: 0.0,
-                actions: <Widget>[],
-              ),
-              body: Form(
-                  key: _formKey,
-                  child: ListView(
-                      padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+            return Scaffold(
+                backgroundColor: Colors.orange[200],
+                appBar: AppBar(
+                  title: Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                        SizedBox(height: 10),
-                        build1(),
-                        build2(),
-                        build3(),
-                        build4(),
-                        Container(
-                            padding: EdgeInsets.fromLTRB(0, 20, 10, 0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: <Widget>[
-                                FloatingActionButton(
-                                  backgroundColor: Colors.deepOrange,
-                                  elevation: 5,
-                                  onPressed: () {
-                                    createData(selected);
-                                  },
-                                  child: new Icon(Icons.add),
-                                ),
-                              ],
-                            ))
-                      ])));
+                        Image.asset(
+                          'assets/logo.png',
+                          scale: 40,
+                        ),
+                      ],
+                    ),
+                  ),
+                  backgroundColor: Colors.deepOrange,
+                  elevation: 0.0,
+                  actions: <Widget>[],
+                ),
+                body: Form(
+                    key: _formKey,
+                    child: ListView(
+                        padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                        children: <Widget>[
+                          SizedBox(height: 10),
+                          build1(),
+                          build2(),
+                          build3(),
+                          build4(),
+                          Container(
+                              padding: EdgeInsets.fromLTRB(0, 20, 10, 0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                  FloatingActionButton(
+                                    backgroundColor: Colors.deepOrange,
+                                    elevation: 5,
+                                    onPressed: () {
+                                      createData(selected);
+                                    },
+                                    child: new Icon(Icons.add),
+                                  ),
+                                ],
+                              ))
+                        ])));
+          }
+          return Loading();
         });
   }
 
@@ -159,7 +163,7 @@ class InsertDishState extends State<InsertDish> {
         maxLines: null,
         validator: (val) => val.isEmpty ? 'Enter an email' : null,
         onChanged: (val) {
-          //setState(() => email = val);
+          setState(() => dish.description = val);
         },
         obscureText: false,
         style: TextStyle(
@@ -179,7 +183,7 @@ class InsertDishState extends State<InsertDish> {
         maxLines: null,
         validator: (val) => val.isEmpty ? 'Enter an email' : null,
         onChanged: (val) {
-          //setState(() => email = val);
+          setState(() => dish.name = val);
         },
         obscureText: false,
         style: TextStyle(
@@ -235,7 +239,6 @@ class InsertDishState extends State<InsertDish> {
 
   void createData(CustomUser selected) async {
     if (_formKey.currentState.validate()) {
-      //_formKey.currentState.save();
       DocumentReference ref = await db.collection('dishes').add({
         'allergens': dish.allergens,
         'price': dish.price,

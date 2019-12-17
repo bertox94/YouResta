@@ -26,7 +26,7 @@ class Wrapper2 extends StatelessWidget {
         } else if (snapshot.hasError) {
           throw new Exception('\nSomething went wrong :(');
         } else if (customUser.isBusiness) {
-          return HomeBusiness();
+          return HomeBusiness(user: user);
         } else {
           return HomeCustomer();
         }

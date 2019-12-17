@@ -64,6 +64,9 @@ class HomeBusinessState extends State<HomeBusiness> {
 
   TextFormField buildTextFormField() {
     return TextFormField(
+      onChanged: (val) {
+        setState(() => name = val);
+      },
       decoration: InputDecoration(
         border: InputBorder.none,
         hintText: 'name',
@@ -76,7 +79,6 @@ class HomeBusinessState extends State<HomeBusiness> {
         }
         return null;
       },
-      onSaved: (value) => name = value,
     );
   }
 
@@ -161,7 +163,6 @@ class HomeBusinessState extends State<HomeBusiness> {
 
   void createData() async {
     if (_formKey.currentState.validate()) {
-      //_formKey.currentState.save();
       DocumentReference ref = await db
           .collection('CRUD')
           .add({'name': '$name 😎', 'todo': randomTodo()});

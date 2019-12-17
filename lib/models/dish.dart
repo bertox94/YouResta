@@ -1,19 +1,22 @@
 import 'package:youresta/models/review.dart';
 
 class Dish {
-  final String allergenes;
-  final int cost;
-  final String description;
-  final String name;
-  final String owner;
-  final List<Review> reviews;
+  String allergens;
+  int price;
+  String description;
+  String name;
+  String ingredients;
+  String owner;
+  List<Review> reviews;
+
   //final String picture;
 
   Dish({
-    this.allergenes,
-    this.cost,
+    this.allergens,
+    this.price,
     this.description,
     this.name,
+    this.ingredients,
     this.owner,
     this.reviews,
     //this.picture,

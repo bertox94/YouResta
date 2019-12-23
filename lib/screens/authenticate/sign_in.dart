@@ -100,11 +100,11 @@ class _SignInState extends State<SignIn> {
                   ],
                 ),
                 Container(
-                  alignment: Alignment(0,0),
+                  alignment: Alignment(0, 0),
                   margin: EdgeInsets.all(5),
                   child: Text(
                     'OR',
-                    style: TextStyle(color: Colors.white,fontSize: 15),
+                    style: TextStyle(color: Colors.white, fontSize: 15),
                   ),
                 ),
                 Row(

@@ -213,7 +213,7 @@ class _ReviewScreenEditableState extends State<ReviewScreenEditable> {
               Row(
                 children: <Widget>[
                   Text(
-                    'cost: ${review.text}',
+                    'cost: ${review.text}€',
                     style: TextStyle(fontSize: 20),
                   ),
                 ],

@@ -27,10 +27,9 @@ class _RegisterState extends State<Register> {
   String password = '';
   String name = '';
 
-
   @override
   Widget build(BuildContext context) {
-    CustomUser buildItem(DocumentSnapshot doc) {
+    CustomUser buildUser(DocumentSnapshot doc) {
       return new CustomUser(
           uid: doc.data['uid'],
           name: doc.data['name'],
@@ -43,7 +42,7 @@ class _RegisterState extends State<Register> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             List customUsers =
-                snapshot.data.documents.map((doc) => buildItem(doc)).toList();
+                snapshot.data.documents.map((doc) => buildUser(doc)).toList();
 
             return TextFormField(
                 validator: (value) {
@@ -51,7 +50,8 @@ class _RegisterState extends State<Register> {
                     return 'The name must not be empty';
                   }
                   for (int i = 0; i < customUsers.length; i++) {
-                    if (value == customUsers.elementAt(i).name)
+                    if (value.toLowerCase().trim() ==
+                        customUsers.elementAt(i).name.toLowerCase().trim())
                       return 'This name is not available';
                   }
                   return null;
@@ -163,7 +163,7 @@ class _RegisterState extends State<Register> {
                               setState(() => loading = true);
                               dynamic result =
                                   await _auth.registerWithEmailAndPassword(
-                                      email, password, name, isBusiness);
+                                      email, password, name.trim(), isBusiness);
                               if (result == null) {
                                 setState(() {
                                   loading = false;

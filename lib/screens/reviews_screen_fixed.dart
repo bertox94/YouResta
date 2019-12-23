@@ -30,7 +30,7 @@ class ReviewScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 20),
               ),
               Text(
-                'cost: ${review.text}',
+                'cost: ${review.text}€',
                 style: TextStyle(fontSize: 20),
               ),
               SizedBox(height: 6),

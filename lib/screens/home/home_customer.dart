@@ -32,7 +32,35 @@ class HomeCustomerState extends State<HomeCustomer> {
   String name;
   int randomNumber = -1;
 
-  Card buildItem(DocumentSnapshot doc) {
+  dynamic buildAdditional1(DocumentSnapshot doc, var deviceData) {
+    if (deviceData.orientation == Orientation.landscape) {
+      return Text(
+        'additional1: ${doc.data['allergenes']}',
+        style: TextStyle(fontSize: 20),
+      );
+    } else {
+      return SizedBox(
+        height: 0,
+        width: 0,
+      );
+    }
+  }
+
+  dynamic buildAdditional2(DocumentSnapshot doc, var deviceData) {
+    if (deviceData.orientation == Orientation.landscape) {
+      return Text(
+        'additional2: add2',
+        style: TextStyle(fontSize: 20),
+      );
+    } else {
+      return SizedBox(
+        height: 0,
+        width: 0,
+      );
+    }
+  }
+
+  Card buildItem(DocumentSnapshot doc, var deviceData) {
     return Card(
         margin: const EdgeInsets.all(8.0),
         child: Column(
@@ -53,18 +81,65 @@ class HomeCustomerState extends State<HomeCustomer> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(
-                        'name: ${doc.data['name']}',
-                        style: TextStyle(fontSize: 24),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.65,
+                        child: Text(
+                          'name: ${doc.data['name']}',
+                          maxLines: (MediaQuery.of(context).orientation ==
+                                  Orientation.portrait
+                              ? 1
+                              : null),
+                          softWrap: (MediaQuery.of(context).orientation ==
+                                  Orientation.portrait
+                              ? false
+                              : true),
+                          overflow: (MediaQuery.of(context).orientation ==
+                                  Orientation.portrait
+                              ? TextOverflow.fade
+                              : null),
+                          style: TextStyle(fontSize: 20),
+                        ),
                       ),
-                      Text(
-                        'desc: ${doc.data['description']}',
-                        style: TextStyle(fontSize: 20),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.65,
+                        child: Text(
+                          'desc: ${doc.data['description']}',
+                          maxLines: (MediaQuery.of(context).orientation ==
+                                  Orientation.portrait
+                              ? 1
+                              : null),
+                          softWrap: (MediaQuery.of(context).orientation ==
+                                  Orientation.portrait
+                              ? false
+                              : true),
+                          overflow: (MediaQuery.of(context).orientation ==
+                                  Orientation.portrait
+                              ? TextOverflow.fade
+                              : null),
+                          style: TextStyle(fontSize: 20),
+                        ),
                       ),
-                      Text(
-                        'cost: ${doc.data['price']}',
-                        style: TextStyle(fontSize: 20),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.65,
+                        child: Text(
+                          'cost: ${doc.data['price']}€',
+                          maxLines: (MediaQuery.of(context).orientation ==
+                                  Orientation.portrait
+                              ? 1
+                              : null),
+                          softWrap: (MediaQuery.of(context).orientation ==
+                                  Orientation.portrait
+                              ? false
+                              : true),
+                          overflow: (MediaQuery.of(context).orientation ==
+                                  Orientation.portrait
+                              ? TextOverflow.fade
+                              : null),
+                          style: TextStyle(fontSize: 20),
+                        ),
                       ),
+                      buildAdditional1(doc, deviceData),
+                      buildAdditional2(doc, deviceData),
                       SizedBox(height: 6),
                     ],
                   ),
@@ -98,7 +173,7 @@ class HomeCustomerState extends State<HomeCustomer> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => ReviewScreenEditable(
-                              user: widget.customUser,
+                                user: widget.customUser,
                                 dish: new Dish(
                                     allergens: doc.data['allergens'],
                                     description: doc.data['description'],
@@ -128,8 +203,8 @@ class HomeCustomerState extends State<HomeCustomer> {
                     Share.share(text,
                         subject: '${doc.data[name]}',
                         sharePositionOrigin:
-                        renderBox.localToGlobal(Offset.zero) &
-                        renderBox.size);
+                            renderBox.localToGlobal(Offset.zero) &
+                                renderBox.size);
                   },
                   child: new Icon(
                     Icons.share,
@@ -166,6 +241,8 @@ class HomeCustomerState extends State<HomeCustomer> {
 
   @override
   Widget build(BuildContext context) {
+    var deviceData = MediaQuery.of(context);
+
     return Scaffold(
         backgroundColor: Colors.orange[100],
         appBar: AppBar(
@@ -198,7 +275,7 @@ class HomeCustomerState extends State<HomeCustomer> {
               return ListView(
                   padding: EdgeInsets.all(8),
                   children: snapshot.data.documents
-                      .map((doc) => buildItem(doc))
+                      .map((doc) => buildItem(doc, deviceData))
                       .toList());
             } else {
               return SizedBox();

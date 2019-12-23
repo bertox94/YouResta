@@ -8,6 +8,7 @@ class Dish {
   String name;
   String ingredients;
   String owner;
+  //String type; carne o pesce, sulla abse di questo sceglo l'avatar
   List<Review> reviews;
 
   //final String picture;

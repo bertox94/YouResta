@@ -28,7 +28,7 @@ class Wrapper2 extends StatelessWidget {
         } else if (customUser.isBusiness) {
           return HomeBusiness(user: user);
         } else {
-          return HomeCustomer();
+          return HomeCustomer(user: user,);
         }
       },
     );

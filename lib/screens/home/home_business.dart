@@ -28,24 +28,40 @@ class HomeBusinessState extends State<HomeBusiness> {
 
   Card buildItem(DocumentSnapshot doc) {
     return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        margin: const EdgeInsets.all(8.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(
-              'name: ${doc.data['name']}',
-              style: TextStyle(fontSize: 24),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: CircleAvatar(
+                    radius: 25.0,
+                    backgroundColor: Colors.brown[100],
+                    backgroundImage: AssetImage('assets/coffee_icon.png'),
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      'name: ${doc.data['name']}',
+                      style: TextStyle(fontSize: 24),
+                    ),
+                    Text(
+                      'desc: ${doc.data['description']}',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    Text(
+                      'cost: ${doc.data['price']}',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    SizedBox(height: 6),
+                  ],
+                ),
+              ],
             ),
-            Text(
-              'desc: ${doc.data['description']}',
-              style: TextStyle(fontSize: 20),
-            ),
-            Text(
-              'cost: ${doc.data['price']}',
-              style: TextStyle(fontSize: 20),
-            ),
-            SizedBox(height: 6),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
@@ -108,9 +124,7 @@ class HomeBusinessState extends State<HomeBusiness> {
               ],
             )
           ],
-        ),
-      ),
-    );
+        ));
   }
 
   TextFormField buildTextFormField() {

@@ -8,6 +8,8 @@ import 'package:youresta/screens/home/update_dish.dart';
 import 'package:youresta/screens/reviews_screen.dart';
 import 'package:youresta/services/auth.dart';
 
+import '../dish_detail_screen.dart';
+
 class HomeCustomer extends StatefulWidget {
   final FirebaseUser user;
 
@@ -36,13 +38,12 @@ class HomeCustomerState extends State<HomeCustomer> {
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10),
-                  child:CircleAvatar(
+                  child: CircleAvatar(
                     radius: 25.0,
                     backgroundColor: Colors.brown[100],
                     backgroundImage: AssetImage('assets/coffee_icon.png'),
                   ),
                 ),
-
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -70,24 +71,18 @@ class HomeCustomerState extends State<HomeCustomer> {
                   onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ReviewScreen(
-                              dish: new Dish(
-                                  allergens: doc.data['allergens'],
-                                  description: doc.data['description'],
-                                  ingredients: doc.data['ingredients'],
-                                  name: doc.data['name'],
-                                  uid: doc.data['uid'],
-                                  owner: doc.data['owner'],
-                                  price: doc.data['price'],
-                                  reviews: doc.data['reviews']
-                                      .map<Review>((document) {
-                                    return new Review(
-                                        stars: document['stars'],
-                                        who: document['who'],
-                                        text: document['text']);
-                                  }).toList())))),
-                  child:
-                      Text('Reviews', style: TextStyle(color: Colors.orange)),
+                          builder: (context) => DishDetailScreen(
+                            dish: new Dish(
+                              allergens: doc.data['allergens'],
+                              description: doc.data['description'],
+                              ingredients: doc.data['ingredients'],
+                              name: doc.data['name'],
+                              uid: doc.data['uid'],
+                              owner: doc.data['owner'],
+                              price: doc.data['price'],
+                            ),
+                          ))),
+                  child: Text('Detail', style: TextStyle(color: Colors.orange)),
                   //color: Colors.blueGrey,
                 ),
                 FlatButton(
@@ -95,9 +90,8 @@ class HomeCustomerState extends State<HomeCustomer> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => UpdateDish(
-                                user: widget.user,
-                                oldDish: new Dish(
+                            builder: (context) => ReviewScreen(
+                                dish: new Dish(
                                     allergens: doc.data['allergens'],
                                     description: doc.data['description'],
                                     ingredients: doc.data['ingredients'],
@@ -113,15 +107,11 @@ class HomeCustomerState extends State<HomeCustomer> {
                                           text: document['text']);
                                     }).toList()))));
                   },
-                  child: Text('Update', style: TextStyle(color: Colors.orange)),
+                  child:
+                      Text('Reviews', style: TextStyle(color: Colors.orange)),
                   //color: Colors.green,
                 ),
                 SizedBox(width: 8),
-                FlatButton(
-                  onPressed: () => deleteData(doc),
-                  child: Text('Delete', style: TextStyle(color: Colors.red)),
-                  //color: Colors.blueGrey,
-                ),
               ],
             )
           ],

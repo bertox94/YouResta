@@ -98,6 +98,7 @@ class HomeCustomerState extends State<HomeCustomer> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => ReviewScreenEditable(
+                              user: widget.customUser,
                                 dish: new Dish(
                                     allergens: doc.data['allergens'],
                                     description: doc.data['description'],

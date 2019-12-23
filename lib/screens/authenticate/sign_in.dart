@@ -79,15 +79,6 @@ class _SignInState extends State<SignIn> {
                     SizedBox(
                         width: 120,
                         child: RaisedButton(
-                          onPressed: () => widget.toggleView(),
-                          child:
-                              Text("Register", style: TextStyle(fontSize: 20)),
-                          color: Colors.red,
-                          textColor: Colors.white,
-                        )),
-                    SizedBox(
-                        width: 120,
-                        child: RaisedButton(
                           onPressed: () async {
                             if (_formKey.currentState.validate()) {
                               setState(() => loading = true);
@@ -104,6 +95,28 @@ class _SignInState extends State<SignIn> {
                           },
                           child: Text("Log In", style: TextStyle(fontSize: 20)),
                           color: Colors.orange,
+                          textColor: Colors.white,
+                        )),
+                  ],
+                ),
+                Container(
+                  alignment: Alignment(0,0),
+                  margin: EdgeInsets.all(5),
+                  child: Text(
+                    'OR',
+                    style: TextStyle(color: Colors.white,fontSize: 15),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    SizedBox(
+                        width: 120,
+                        child: RaisedButton(
+                          onPressed: () => widget.toggleView(),
+                          child:
+                              Text("Register", style: TextStyle(fontSize: 20)),
+                          color: Colors.red,
                           textColor: Colors.white,
                         )),
                   ],

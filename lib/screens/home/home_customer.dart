@@ -1,20 +1,23 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:share/share.dart';
+import 'package:youresta/models/custom_user.dart';
 import 'package:youresta/models/dish.dart';
 import 'package:youresta/models/review.dart';
 import 'package:youresta/screens/home/insert_dish.dart';
 import 'package:youresta/screens/home/update_dish.dart';
-import 'package:youresta/screens/reviews_screen.dart';
+import 'package:youresta/screens/reviews_screen_fixed.dart';
 import 'package:youresta/services/auth.dart';
 
 import '../dish_detail_screen.dart';
 import '../reviews_screen_editable.dart';
 
 class HomeCustomer extends StatefulWidget {
-  final FirebaseUser user;
+  final FirebaseUser firebaseUser;
+  final CustomUser customUser;
 
-  HomeCustomer({this.user});
+  HomeCustomer({this.customUser, this.firebaseUser});
 
   @override
   HomeCustomerState createState() {
@@ -45,23 +48,26 @@ class HomeCustomerState extends State<HomeCustomer> {
                     backgroundImage: AssetImage('assets/coffee_icon.png'),
                   ),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'name: ${doc.data['name']}',
-                      style: TextStyle(fontSize: 24),
-                    ),
-                    Text(
-                      'desc: ${doc.data['description']}',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    Text(
-                      'cost: ${doc.data['price']}',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    SizedBox(height: 6),
-                  ],
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        'name: ${doc.data['name']}',
+                        style: TextStyle(fontSize: 24),
+                      ),
+                      Text(
+                        'desc: ${doc.data['description']}',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      Text(
+                        'cost: ${doc.data['price']}',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      SizedBox(height: 6),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -73,16 +79,16 @@ class HomeCustomerState extends State<HomeCustomer> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => DishDetailScreen(
-                            dish: new Dish(
-                              allergens: doc.data['allergens'],
-                              description: doc.data['description'],
-                              ingredients: doc.data['ingredients'],
-                              name: doc.data['name'],
-                              uid: doc.data['uid'],
-                              owner: doc.data['owner'],
-                              price: doc.data['price'],
-                            ),
-                          ))),
+                                dish: new Dish(
+                                  allergens: doc.data['allergens'],
+                                  description: doc.data['description'],
+                                  ingredients: doc.data['ingredients'],
+                                  name: doc.data['name'],
+                                  uid: doc.data['uid'],
+                                  owner: doc.data['owner'],
+                                  price: doc.data['price'],
+                                ),
+                              ))),
                   child: Text('Detail', style: TextStyle(color: Colors.orange)),
                   //color: Colors.blueGrey,
                 ),
@@ -112,7 +118,25 @@ class HomeCustomerState extends State<HomeCustomer> {
                       Text('Reviews', style: TextStyle(color: Colors.orange)),
                   //color: Colors.green,
                 ),
-                SizedBox(width: 8),
+                FlatButton(
+                  onPressed: () {
+                    RenderBox renderBox = context.findRenderObject();
+                    String text =
+                        'I found this amazing dish: ${doc.data[name]} at Restaurant: ${doc['owner']}. Check this out on YouResta!';
+
+                    Share.share(text,
+                        subject: '${doc.data[name]}',
+                        sharePositionOrigin:
+                        renderBox.localToGlobal(Offset.zero) &
+                        renderBox.size);
+                  },
+                  child: new Icon(
+                    Icons.share,
+                    color: Colors.orange,
+                    //size: 30,
+                  ),
+                  //color: Colors.blueGrey,
+                ),
               ],
             )
           ],
@@ -157,18 +181,6 @@ class HomeCustomerState extends State<HomeCustomer> {
           backgroundColor: Colors.deepOrange,
           elevation: 0.0,
           actions: <Widget>[
-            FlatButton.icon(
-              label: Text('Add'),
-              onPressed: () async {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => InsertDish(
-                              user: widget.user,
-                            )));
-              },
-              icon: Icon(Icons.restaurant_menu),
-            ),
             FlatButton.icon(
               label: Text('Log Out'),
               onPressed: () async {

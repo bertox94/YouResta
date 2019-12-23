@@ -103,7 +103,7 @@ class _ReviewScreenEditableState extends State<ReviewScreenEditable> {
     Card buildItem(Review review) {
       return Card(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -133,8 +133,8 @@ class _ReviewScreenEditableState extends State<ReviewScreenEditable> {
         ),
         body: ListView(
           children: <Widget>[
-            ListView(
-                padding: EdgeInsets.all(8),
+            Column(
+                //padding: EdgeInsets.all(8),
                 children:
                     widget.dish.reviews.map((doc) => buildItem(doc)).toList()),
             buildNewReview(),

@@ -1,17 +1,19 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:youresta/models/custom_user.dart';
 import 'package:youresta/models/dish.dart';
 import 'package:youresta/models/review.dart';
 import 'package:youresta/screens/home/insert_dish.dart';
 import 'package:youresta/screens/home/update_dish.dart';
-import 'package:youresta/screens/reviews_screen.dart';
+import 'package:youresta/screens/reviews_screen_fixed.dart';
 import 'package:youresta/services/auth.dart';
 
 class HomeBusiness extends StatefulWidget {
-  final FirebaseUser user;
+  final FirebaseUser firebaseUser;
+  final CustomUser customUser;
 
-  HomeBusiness({this.user});
+  HomeBusiness({this.customUser, this.firebaseUser});
 
   @override
   HomeBusinessState createState() {
@@ -95,7 +97,7 @@ class HomeBusinessState extends State<HomeBusiness> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => UpdateDish(
-                                user: widget.user,
+                                user: widget.firebaseUser,
                                 oldDish: new Dish(
                                     allergens: doc.data['allergens'],
                                     description: doc.data['description'],
@@ -172,7 +174,7 @@ class HomeBusinessState extends State<HomeBusiness> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => InsertDish(
-                              user: widget.user,
+                              user: widget.firebaseUser,
                             )));
               },
               icon: Icon(Icons.restaurant_menu),
@@ -193,6 +195,7 @@ class HomeBusinessState extends State<HomeBusiness> {
               return ListView(
                   padding: EdgeInsets.all(8),
                   children: snapshot.data.documents
+                      .where((x) => x.data['owner'].toLowerCase().equals(widget.customUser.name))
                       .map((doc) => buildItem(doc))
                       .toList());
             } else {

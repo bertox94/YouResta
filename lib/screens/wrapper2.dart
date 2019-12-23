@@ -16,7 +16,7 @@ class Wrapper2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
+    return StreamBuilder<CustomUser>(
       stream: CustomUserManager(uid: user.uid).userData,
       builder: (context, snapshot) {
         CustomUser customUser = snapshot.data;
@@ -26,9 +26,9 @@ class Wrapper2 extends StatelessWidget {
         } else if (snapshot.hasError) {
           throw new Exception('\nSomething went wrong :(');
         } else if (customUser.isBusiness) {
-          return HomeBusiness();
+          return HomeBusiness(customUser: customUser,firebaseUser: user);
         } else {
-          return HomeCustomer(customUser: customUser,firebaseUser: user,);
+          return HomeCustomer(customUser: customUser,firebaseUser: user);
         }
       },
     );

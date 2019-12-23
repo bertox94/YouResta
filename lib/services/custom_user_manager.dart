@@ -23,7 +23,7 @@ class CustomUserManager {
 
   // user data from snapshots
   CustomUser _userDataFromSnapshot(DocumentSnapshot snapshot) {
-    return CustomUser(uid: uid, isBusiness: snapshot.data['isBusiness']);
+    return CustomUser(uid: uid, name: snapshot.data['name'], isBusiness: snapshot.data['isBusiness']);
   }
 
   Future<void> deleteUser() async {

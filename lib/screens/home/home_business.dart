@@ -195,7 +195,13 @@ class HomeBusinessState extends State<HomeBusiness> {
               return ListView(
                   padding: EdgeInsets.all(8),
                   children: snapshot.data.documents
-                      .where((x) => x.data['owner'].toLowerCase().equals(widget.customUser.name))
+                      .where((x) => (x.data['owner']
+                                  .toString()
+                                  .toLowerCase()
+                                  .trim()
+                                  .compareTo(widget.customUser.name)) == 0
+                          ? true
+                          : false)
                       .map((doc) => buildItem(doc))
                       .toList());
             } else {

@@ -24,6 +24,7 @@ class UpdateDishState extends State<UpdateDish> {
   final db = Firestore.instance;
   final _formKey = GlobalKey<FormState>();
   Dish dish = new Dish();
+  bool loaded = false;
 
   TextFormField buildTextFormField() {
     return TextFormField(
@@ -52,11 +53,18 @@ class UpdateDishState extends State<UpdateDish> {
 
   @override
   Widget build(BuildContext context) {
-    dish.name = widget.oldDish.name;
-    dish.description = widget.oldDish.name;
-    dish.price = widget.oldDish.price;
-    dish.allergens = widget.oldDish.allergens;
-    dish.ingredients = widget.oldDish.ingredients;
+    //bool loaded = false;
+
+    if (!loaded) {
+      dish.name = widget.oldDish.name;
+      dish.description = widget.oldDish.description;
+      dish.price = widget.oldDish.price;
+      dish.allergens = widget.oldDish.allergens;
+      dish.ingredients = widget.oldDish.ingredients;
+      dish.owner = widget.oldDish.owner;
+      dish.uid = widget.oldDish.uid;
+      loaded = true;
+    }
 
     return StreamBuilder(
         stream: Firestore.instance.collection('custom_users').snapshots(),
@@ -73,7 +81,7 @@ class UpdateDishState extends State<UpdateDish> {
             }
 
             return Scaffold(
-                backgroundColor: Colors.orange[200],
+                backgroundColor: Colors.orange[100],
                 appBar: AppBar(
                   title: Container(
                     child: Row(
@@ -96,10 +104,10 @@ class UpdateDishState extends State<UpdateDish> {
                         padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                         children: <Widget>[
                           SizedBox(height: 10),
-                          build1(),
+                          build4(),
                           build2(),
                           build3(),
-                          build4(),
+                          build1(),
                           Container(
                               padding: EdgeInsets.fromLTRB(0, 20, 10, 0),
                               child: Row(
@@ -109,9 +117,10 @@ class UpdateDishState extends State<UpdateDish> {
                                     backgroundColor: Colors.deepOrange,
                                     elevation: 5,
                                     onPressed: () {
-                                      createData(selected);
+                                      updateData(selected);
+                                      Navigator.pop(context);
                                     },
-                                    child: new Icon(Icons.add),
+                                    child: new Icon(Icons.save),
                                   ),
                                 ],
                               ))
@@ -248,18 +257,14 @@ class UpdateDishState extends State<UpdateDish> {
         ));
   }
 
-  void createData(CustomUser selected) async {
-    if (_formKey.currentState.validate()) {
-      DocumentReference ref = await db.collection('dishes').add({
-        'allergens': dish.allergens,
-        'price': dish.price,
-        'description': dish.description,
-        'name': dish.name,
-        'ingredients': dish.ingredients,
-        'owner': selected.name,
-      });
-      //setState(() => id = ref.documentID);
-      //print(ref.documentID);
-    }
+  void updateData(CustomUser selected) async {
+    await db.collection('dishes').document(widget.oldDish.uid).updateData({
+      'allergens': dish.allergens,
+      'price': dish.price,
+      'description': dish.description,
+      'name': dish.name,
+      'ingredients': dish.ingredients,
+      'owner': selected.name,
+    });
   }
 }

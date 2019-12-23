@@ -2,6 +2,7 @@ import 'package:youresta/models/review.dart';
 
 class Dish {
   String allergens;
+  String uid;
   int price;
   String description;
   String name;
@@ -12,6 +13,7 @@ class Dish {
   //final String picture;
 
   Dish({
+    this.uid,
     this.allergens,
     this.price,
     this.description,

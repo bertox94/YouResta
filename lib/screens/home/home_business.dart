@@ -5,6 +5,7 @@ import 'package:youresta/models/dish.dart';
 import 'package:youresta/models/review.dart';
 import 'package:youresta/screens/home/insert_dish.dart';
 import 'package:youresta/screens/home/update_dish.dart';
+import 'package:youresta/screens/reviews_screen.dart';
 import 'package:youresta/services/auth.dart';
 
 class HomeBusiness extends StatefulWidget {
@@ -37,13 +38,41 @@ class HomeBusinessState extends State<HomeBusiness> {
               style: TextStyle(fontSize: 24),
             ),
             Text(
-              'todo: ${doc.data['todo']}',
+              'desc: ${doc.data['description']}',
               style: TextStyle(fontSize: 20),
             ),
-            SizedBox(height: 12),
+            Text(
+              'cost: ${doc.data['price']}',
+              style: TextStyle(fontSize: 20),
+            ),
+            SizedBox(height: 6),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
+                FlatButton(
+                  onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ReviewScreen(
+                              dish: new Dish(
+                                  allergens: doc.data['allergens'],
+                                  description: doc.data['description'],
+                                  ingredients: doc.data['ingredients'],
+                                  name: doc.data['name'],
+                                  uid: doc.data['uid'],
+                                  owner: doc.data['owner'],
+                                  price: doc.data['price'],
+                                  reviews: doc.data['reviews']
+                                      .map<Review>((document) {
+                                    return new Review(
+                                        stars: document['stars'],
+                                        who: document['who'],
+                                        text: document['text']);
+                                  }).toList())))),
+                  child:
+                      Text('Reviews', style: TextStyle(color: Colors.orange)),
+                  //color: Colors.blueGrey,
+                ),
                 FlatButton(
                   onPressed: () {
                     Navigator.push(
@@ -56,6 +85,7 @@ class HomeBusinessState extends State<HomeBusiness> {
                                     description: doc.data['description'],
                                     ingredients: doc.data['ingredients'],
                                     name: doc.data['name'],
+                                    uid: doc.data['uid'],
                                     owner: doc.data['owner'],
                                     price: doc.data['price'],
                                     reviews: doc.data['reviews']
@@ -66,14 +96,14 @@ class HomeBusinessState extends State<HomeBusiness> {
                                           text: document['text']);
                                     }).toList()))));
                   },
-                  child: Text('Update todo',
-                      style: TextStyle(color: Colors.white)),
-                  color: Colors.green,
+                  child: Text('Update', style: TextStyle(color: Colors.orange)),
+                  //color: Colors.green,
                 ),
                 SizedBox(width: 8),
                 FlatButton(
                   onPressed: () => deleteData(doc),
-                  child: Text('Delete'),
+                  child: Text('Delete', style: TextStyle(color: Colors.red)),
+                  //color: Colors.blueGrey,
                 ),
               ],
             )
@@ -106,75 +136,56 @@ class HomeBusinessState extends State<HomeBusiness> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.orange[200],
-      appBar: AppBar(
-        title: Container(
-          child: Row(
-            children: <Widget>[
-              Image.asset(
-                'assets/logo.png',
-                scale: 40,
-              ),
-            ],
+        backgroundColor: Colors.orange[100],
+        appBar: AppBar(
+          title: Container(
+            child: Row(
+              children: <Widget>[
+                Image.asset(
+                  'assets/logo.png',
+                  scale: 40,
+                ),
+              ],
+            ),
           ),
+          backgroundColor: Colors.deepOrange,
+          elevation: 0.0,
+          actions: <Widget>[
+            FlatButton.icon(
+              label: Text('Add'),
+              onPressed: () async {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => InsertDish(
+                              user: widget.user,
+                            )));
+              },
+              icon: Icon(Icons.restaurant_menu),
+            ),
+            FlatButton.icon(
+              label: Text('Log Out'),
+              onPressed: () async {
+                await _auth.signOut();
+              },
+              icon: Icon(Icons.exit_to_app),
+            ),
+          ],
         ),
-        backgroundColor: Colors.deepOrange,
-        elevation: 0.0,
-        actions: <Widget>[
-          FlatButton.icon(
-            label: Text('Add'),
-            onPressed: () async {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => InsertDish(
-                            user: widget.user,
-                          )));
-            },
-            icon: Icon(Icons.restaurant_menu),
-          ),
-          FlatButton.icon(
-            label: Text('Log Out'),
-            onPressed: () async {
-              await _auth.signOut();
-            },
-            icon: Icon(Icons.exit_to_app),
-          ),
-        ],
-      ),
-      body: ListView(
-        padding: EdgeInsets.all(8),
-        children: <Widget>[
-          Form(
-            key: _formKey,
-            child: buildTextFormField(),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              RaisedButton(
-                onPressed: createData,
-                child: Text('Create', style: TextStyle(color: Colors.white)),
-                color: Colors.green,
-              ),
-            ],
-          ),
-          StreamBuilder<QuerySnapshot>(
-            stream: db.collection('dishes').snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Column(
-                    children: snapshot.data.documents
-                        .map((doc) => buildItem(doc))
-                        .toList());
-              } else {
-                return SizedBox();
-              }
-            },
-          )
-        ],
-      ),
-    );
+        body: StreamBuilder<QuerySnapshot>(
+          stream: db.collection('dishes').snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView(
+                  padding: EdgeInsets.all(8),
+                  children: snapshot.data.documents
+                      .map((doc) => buildItem(doc))
+                      .toList());
+            } else {
+              return SizedBox();
+            }
+          },
+        ));
   }
 
   void createData() async {

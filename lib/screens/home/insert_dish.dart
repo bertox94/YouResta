@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:youresta/models/custom_user.dart';
 import 'package:youresta/models/dish.dart';
+import 'package:youresta/models/review.dart';
 import 'package:youresta/services/auth.dart';
 import 'package:youresta/shared/loading.dart';
 
@@ -66,7 +67,7 @@ class InsertDishState extends State<InsertDish> {
             }
 
             return Scaffold(
-                backgroundColor: Colors.orange[200],
+                backgroundColor: Colors.orange[100],
                 appBar: AppBar(
                   title: Container(
                     child: Row(
@@ -89,10 +90,10 @@ class InsertDishState extends State<InsertDish> {
                         padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                         children: <Widget>[
                           SizedBox(height: 10),
-                          build1(),
+                          build4(),
                           build2(),
                           build3(),
-                          build4(),
+                          build1(),
                           Container(
                               padding: EdgeInsets.fromLTRB(0, 20, 10, 0),
                               child: Row(
@@ -103,6 +104,7 @@ class InsertDishState extends State<InsertDish> {
                                     elevation: 5,
                                     onPressed: () {
                                       createData(selected);
+                                      Navigator.pop(context);
                                     },
                                     child: new Icon(Icons.add),
                                   ),
@@ -240,15 +242,19 @@ class InsertDishState extends State<InsertDish> {
   void createData(CustomUser selected) async {
     if (_formKey.currentState.validate()) {
       DocumentReference ref = await db.collection('dishes').add({
-        'allergens': dish.allergens,
-        'price': dish.price,
-        'description': dish.description,
-        'name': dish.name,
-        'ingredients': dish.ingredients,
-        'owner': selected.name,
       });
-      //setState(() => id = ref.documentID);
-      //print(ref.documentID);
+
+      await db.collection('dishes').document(ref.documentID).updateData({
+      'uid': ref.documentID,
+      'allergens': dish.allergens,
+      'price': dish.price,
+      'description': dish.description,
+      'name': dish.name,
+      'ingredients': dish.ingredients,
+      'owner': selected.name,
+      'reviews': new List<Review>(),
+      });
+
     }
   }
 }

@@ -9,6 +9,7 @@ import 'package:youresta/screens/reviews_screen.dart';
 import 'package:youresta/services/auth.dart';
 
 import '../dish_detail_screen.dart';
+import '../reviews_screen_editable.dart';
 
 class HomeCustomer extends StatefulWidget {
   final FirebaseUser user;
@@ -90,7 +91,7 @@ class HomeCustomerState extends State<HomeCustomer> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ReviewScreen(
+                            builder: (context) => ReviewScreenEditable(
                                 dish: new Dish(
                                     allergens: doc.data['allergens'],
                                     description: doc.data['description'],

@@ -16,22 +16,18 @@ class DishDetailScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                'name: ${dish.name}',
+                'name: ',
                 style: TextStyle(fontSize: 24),
               ),
               Text(
-                'desc: ${dish.owner}',
+                'desc: ',
                 style: TextStyle(fontSize: 20),
               ),
               Text(
-                'cost: ${dish.ingredients}',
+                'cost: ',
                 style: TextStyle(fontSize: 20),
               ),
-              Text(
-                'cost: ${dish.allergens}',
-                style: TextStyle(fontSize: 20),
-              ),
-              //SizedBox(height: 6),
+              SizedBox(height: 6),
             ],
           ),
         ),
@@ -40,10 +36,10 @@ class DishDetailScreen extends StatelessWidget {
 
     return Scaffold(
         backgroundColor: Colors.orange[100],
-        appBar: AppBar(
-          backgroundColor: Colors.deepOrange,
-        ),
-        body: Container(padding: EdgeInsets.all(0), child: buildItem(dish)));
+        appBar: AppBar(backgroundColor: Colors.deepOrange),
+        body: ListView(
+            padding: EdgeInsets.all(8),
+            children: {buildItem(dish)}.toList()));
   }
 }
 

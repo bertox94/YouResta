@@ -1,7 +1,7 @@
 class Review {
-  final int stars;
-  final String text;
-  final String who;
+  int stars;
+  String text;
+  String who;
 
   Review({this.stars, this.text, this.who});
 }

@@ -290,14 +290,6 @@ class HomeBusinessState extends State<HomeBusiness> {
         ));
   }
 
-  void createData() async {
-    if (_formKey.currentState.validate()) {
-      DocumentReference ref = await db
-          .collection('dishes')
-          .add({'name': '$name 😎', 'todo': randomTodo()});
-      print(ref.documentID);
-    }
-  }
 
   //how to get the element, however remind that you should use streams
   void readData() async {
@@ -306,35 +298,9 @@ class HomeBusinessState extends State<HomeBusiness> {
     print(snapshot.data['name']);
   }
 
-  void updateData(DocumentSnapshot doc) async {
-    await db
-        .collection('CRUD')
-        .document(doc.documentID)
-        .updateData({'todo': 'please 🤫'});
-  }
 
   void deleteData(DocumentSnapshot doc) async {
     await db.collection('dishes').document(doc.documentID).delete();
   }
 
-  String randomTodo() {
-    randomNumber++;
-    randomNumber %= 4;
-    String todo;
-    switch (randomNumber) {
-      case 0:
-        todo = 'Like and subscribe 💩';
-        break;
-      case 1:
-        todo = 'Twitter @robertbrunhage 🤣';
-        break;
-      case 2:
-        todo = 'Patreon in the description 🤗';
-        break;
-      case 3:
-        todo = 'Leave a comment 🤓';
-        break;
-    }
-    return todo;
-  }
 }

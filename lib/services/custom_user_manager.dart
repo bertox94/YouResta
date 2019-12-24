@@ -21,10 +21,6 @@ class CustomUserManager {
     });
   }
 
-  // user data from snapshots
-  CustomUser _userDataFromSnapshot(DocumentSnapshot snapshot) {
-    return CustomUser(uid: uid, name: snapshot.data['name'], isBusiness: snapshot.data['isBusiness']);
-  }
 
   Future<void> deleteUser() async {
     return await customUserCollection.document(uid).delete();
@@ -32,9 +28,8 @@ class CustomUserManager {
 
   // get user doc stream
   Stream<CustomUser> get userData {
-    return customUserCollection
-        .document(uid)
-        .snapshots()
-        .map(_userDataFromSnapshot);
+    return customUserCollection.document(uid).snapshots().map((doc) =>
+        (new CustomUser(
+            name: doc['name'], uid: uid, isBusiness: doc['isBusiness'])));
   }
 }

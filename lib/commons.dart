@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -41,7 +42,8 @@ class Commons {
     );
   }
 
-  static TextFormField buildDishNameField(String initial, Function onChanged) {
+  static TextFormField buildDishNameFormField(
+      String initial, Function onChanged) {
     return TextFormField(
         initialValue: initial,
         keyboardType: TextInputType.multiline,
@@ -60,7 +62,8 @@ class Commons {
         ));
   }
 
-  static TextFormField buildAllergensField(String initial, Function onChanged) {
+  static TextFormField buildAllergensFormField(
+      String initial, Function onChanged) {
     return TextFormField(
         initialValue: initial,
         keyboardType: TextInputType.multiline,
@@ -77,7 +80,7 @@ class Commons {
         ));
   }
 
-  static TextFormField buildDescriptionField(
+  static TextFormField buildDescriptionFormField(
       String initial, Function onChanged) {
     return TextFormField(
         initialValue: initial,
@@ -97,7 +100,7 @@ class Commons {
         ));
   }
 
-  static TextFormField buildIngredientsField(
+  static TextFormField buildIngredientsFormField(
       String initial, Function onChanged) {
     return TextFormField(
         initialValue: initial,
@@ -117,7 +120,8 @@ class Commons {
         ));
   }
 
-  static TextFormField buildDishPriceField(String initial, Function onChanged) {
+  static TextFormField buildDishPriceFormField(
+      String initial, Function onChanged) {
     return TextFormField(
         initialValue: initial,
         keyboardType: TextInputType.number,
@@ -135,5 +139,39 @@ class Commons {
           hintText: 'Price',
           hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
         ));
+  }
+
+  static CircleAvatar buildAvatar(DocumentSnapshot doc) {
+    return CircleAvatar(
+      radius: 25.0,
+      backgroundImage: AssetImage('assets/${doc['picture']}'),
+    );
+  }
+
+  static Container buildTextField(BuildContext context, DocumentSnapshot doc,
+      String arg1, String arg2, String arg3, bool required) {
+    if (required ||
+        MediaQuery.of(context).orientation == Orientation.landscape) {
+      return Container(
+        width: MediaQuery.of(context).size.width * 0.65,
+        child: Text(
+          '$arg1: ${doc.data[arg2]}$arg3',
+          maxLines: (MediaQuery.of(context).orientation == Orientation.portrait
+              ? 1
+              : null),
+          softWrap: (MediaQuery.of(context).orientation == Orientation.portrait
+              ? false
+              : true),
+          overflow: (MediaQuery.of(context).orientation == Orientation.portrait
+              ? TextOverflow.fade
+              : null),
+          style: TextStyle(fontSize: 20),
+        ),
+      );
+    } else
+      return Container(
+        width: 0,
+        height: 0,
+      );
   }
 }

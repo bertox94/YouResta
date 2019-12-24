@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:share/share.dart';
+import 'package:youresta/commons.dart';
 import 'package:youresta/model/custom_user.dart';
 import 'package:youresta/model/dish.dart';
 import 'package:youresta/model/review.dart';
@@ -26,39 +27,8 @@ class HomeCustomer extends StatefulWidget {
 
 class HomeCustomerState extends State<HomeCustomer> {
   final AuthService _auth = AuthService();
-  final formKey = GlobalKey<FormState>();
-  String name;
-  int randomNumber = -1;
 
-  dynamic buildAdditional1(DocumentSnapshot doc, var deviceData) {
-    if (deviceData.orientation == Orientation.landscape) {
-      return Text(
-        'additional1: ${doc.data['allergenes']}',
-        style: TextStyle(fontSize: 20),
-      );
-    } else {
-      return SizedBox(
-        height: 0,
-        width: 0,
-      );
-    }
-  }
-
-  dynamic buildAdditional2(DocumentSnapshot doc, var deviceData) {
-    if (deviceData.orientation == Orientation.landscape) {
-      return Text(
-        'additional2: add2',
-        style: TextStyle(fontSize: 20),
-      );
-    } else {
-      return SizedBox(
-        height: 0,
-        width: 0,
-      );
-    }
-  }
-
-  Card buildItem(DocumentSnapshot doc, var deviceData) {
+  Card buildItem(DocumentSnapshot doc) {
     return Card(
         margin: const EdgeInsets.all(8.0),
         child: Column(
@@ -67,76 +37,25 @@ class HomeCustomerState extends State<HomeCustomer> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: CircleAvatar(
-                    radius: 25.0,
-                    backgroundImage: AssetImage('assets/${doc['picture']}'),
-                  ),
-                ),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Commons.buildAvatar(doc)),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.65,
-                        child: Text(
-                          'name: ${doc.data['name']}',
-                          maxLines: (MediaQuery.of(context).orientation ==
-                                  Orientation.portrait
-                              ? 1
-                              : null),
-                          softWrap: (MediaQuery.of(context).orientation ==
-                                  Orientation.portrait
-                              ? false
-                              : true),
-                          overflow: (MediaQuery.of(context).orientation ==
-                                  Orientation.portrait
-                              ? TextOverflow.fade
-                              : null),
-                          style: TextStyle(fontSize: 20),
-                        ),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.65,
-                        child: Text(
-                          'desc: ${doc.data['description']}',
-                          maxLines: (MediaQuery.of(context).orientation ==
-                                  Orientation.portrait
-                              ? 1
-                              : null),
-                          softWrap: (MediaQuery.of(context).orientation ==
-                                  Orientation.portrait
-                              ? false
-                              : true),
-                          overflow: (MediaQuery.of(context).orientation ==
-                                  Orientation.portrait
-                              ? TextOverflow.fade
-                              : null),
-                          style: TextStyle(fontSize: 20),
-                        ),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.65,
-                        child: Text(
-                          'cost: ${doc.data['price']}€',
-                          maxLines: (MediaQuery.of(context).orientation ==
-                                  Orientation.portrait
-                              ? 1
-                              : null),
-                          softWrap: (MediaQuery.of(context).orientation ==
-                                  Orientation.portrait
-                              ? false
-                              : true),
-                          overflow: (MediaQuery.of(context).orientation ==
-                                  Orientation.portrait
-                              ? TextOverflow.fade
-                              : null),
-                          style: TextStyle(fontSize: 20),
-                        ),
-                      ),
-                      buildAdditional1(doc, deviceData),
-                      buildAdditional2(doc, deviceData),
+                      Commons.buildTextField(
+                          context, doc, 'Name', 'name', '', true),
+                      Commons.buildTextField(
+                          context, doc, 'Price', 'price', '€', true),
+                      Commons.buildTextField(
+                          context, doc, 'Allergens', 'allergens', '', true),
+                      Commons.buildTextField(context, doc, 'Description',
+                          'description', '', false),
+                      Commons.buildTextField(context, doc, 'Ingredients',
+                          'ingredients', '', false),
+                      Commons.buildTextField(
+                          context, doc, 'Owner', 'owner', '', false),
                       SizedBox(height: 6),
                     ],
                   ),
@@ -146,14 +65,21 @@ class HomeCustomerState extends State<HomeCustomer> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                FlatButton(
-                  onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DishDetailScreen(dish: doc))),
-                  child: Text('Detail', style: TextStyle(color: Colors.orange)),
-                  //color: Colors.blueGrey,
-                ),
+                (MediaQuery.of(context).orientation == Orientation.portrait
+                    ? FlatButton(
+                        onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    DishDetailScreen(dish: doc))),
+                        child: Text('Detail',
+                            style: TextStyle(color: Colors.orange)),
+                        //color: Colors.blueGrey,
+                      )
+                    : SizedBox(
+                        height: 0,
+                        width: 0,
+                      )),
                 FlatButton(
                   onPressed: () {
                     Navigator.push(
@@ -178,10 +104,10 @@ class HomeCustomerState extends State<HomeCustomer> {
                   onPressed: () {
                     RenderBox renderBox = context.findRenderObject();
                     String text =
-                        'I found this amazing dish: ${doc.data[name]} at Restaurant: ${doc['owner']}. Check this out on YouResta!';
+                        'I found this amazing dish: ${doc.data['name']} at Restaurant: ${doc['owner']}. Check this out on YouResta!';
 
                     Share.share(text,
-                        subject: '${doc.data[name]}',
+                        subject: '${doc.data['name']}',
                         sharePositionOrigin:
                             renderBox.localToGlobal(Offset.zero) &
                                 renderBox.size);
@@ -199,30 +125,8 @@ class HomeCustomerState extends State<HomeCustomer> {
         ));
   }
 
-  TextFormField buildTextFormField() {
-    return TextFormField(
-      onChanged: (val) {
-        setState(() => name = val);
-      },
-      decoration: InputDecoration(
-        border: InputBorder.none,
-        hintText: 'name',
-        fillColor: Colors.grey[300],
-        filled: true,
-      ),
-      validator: (value) {
-        if (value.isEmpty) {
-          return 'Please enter some text';
-        }
-        return null;
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    var deviceData = MediaQuery.of(context);
-
     return Scaffold(
         backgroundColor: Colors.orange[100],
         appBar: AppBar(
@@ -255,7 +159,7 @@ class HomeCustomerState extends State<HomeCustomer> {
               return ListView(
                   padding: EdgeInsets.all(8),
                   children: snapshot.data.documents
-                      .map((doc) => buildItem(doc, deviceData))
+                      .map((doc) => buildItem(doc))
                       .toList());
             } else {
               return SizedBox();

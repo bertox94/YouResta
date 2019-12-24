@@ -57,25 +57,25 @@ class UpdateDishState extends State<UpdateDish> {
                 padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                 children: <Widget>[
                   SizedBox(height: 10),
-                  Commons.buildDishNameField(
+                  Commons.buildDishNameFormField(
                     dish.name,
                     (val) {
                       dish.name = val;
                     },
                   ),
-                  Commons.buildDishPriceField(
+                  Commons.buildDishPriceFormField(
                     dish.price.toString(),
                     (val) {
                       dish.price = int.parse(val);
                     },
                   ),
-                  Commons.buildIngredientsField(dish.ingredients, (val) {
+                  Commons.buildIngredientsFormField(dish.ingredients, (val) {
                     dish.ingredients = val;
                   }),
-                  Commons.buildDescriptionField(dish.description, (val) {
+                  Commons.buildDescriptionFormField(dish.description, (val) {
                     dish.description = val;
                   }),
-                  Commons.buildAllergensField(dish.allergens, (val) {
+                  Commons.buildAllergensFormField(dish.allergens, (val) {
                     dish.allergens = val;
                   }),
                   Container(

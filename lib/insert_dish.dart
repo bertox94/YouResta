@@ -71,25 +71,25 @@ class InsertDishState extends State<InsertDish> {
                 padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                 children: <Widget>[
                   SizedBox(height: 10),
-                  Commons.buildDishNameField(
+                  Commons.buildDishNameFormField(
                     '',
                     (val) {
                       dish.name = val;
                     },
                   ),
-                  Commons.buildDishPriceField(
+                  Commons.buildDishPriceFormField(
                     '',
                     (val) {
                       dish.price = int.parse(val);
                     },
                   ),
-                  Commons.buildIngredientsField('', (val) {
+                  Commons.buildIngredientsFormField('', (val) {
                     dish.ingredients = val;
                   }),
-                  Commons.buildDescriptionField('', (val) {
+                  Commons.buildDescriptionFormField('', (val) {
                     dish.description = val;
                   }),
-                  Commons.buildAllergensField('', (val) {
+                  Commons.buildAllergensFormField('', (val) {
                     dish.allergens = val;
                   }),
                   Container(

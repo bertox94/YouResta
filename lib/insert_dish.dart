@@ -24,7 +24,6 @@ class InsertDish extends StatefulWidget {
 
 class InsertDishState extends State<InsertDish> {
   String id;
-  final db = Firestore.instance;
   final formKey = GlobalKey<FormState>();
   Dish dish = new Dish();
 
@@ -44,13 +43,6 @@ class InsertDishState extends State<InsertDish> {
       },
       onSaved: (value) {},
     );
-  }
-
-  CustomUser buildItem(DocumentSnapshot doc) {
-    return new CustomUser(
-        uid: doc.data['uid'],
-        name: doc.data['name'],
-        isBusiness: doc.data['isBusiness']);
   }
 
   @override
@@ -122,9 +114,13 @@ class InsertDishState extends State<InsertDish> {
   void createData() async {
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
-      DocumentReference ref = await db.collection('dishes').add({});
+      DocumentReference ref =
+          await Firestore.instance.collection('dishes').add({});
 
-      await db.collection('dishes').document(ref.documentID).updateData({
+      await Firestore.instance
+          .collection('dishes')
+          .document(ref.documentID)
+          .updateData({
         'uid': ref.documentID,
         'allergens': dish.allergens,
         'price': dish.price,

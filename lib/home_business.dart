@@ -154,12 +154,11 @@ class HomeBusinessState extends State<HomeBusiness> {
                                   owner: doc.data['owner'],
                                   price: doc.data['price'],
                                   reviews: doc.data['reviews']
-                                      .map<Review>((document) {
-                                    return new Review(
-                                        stars: document['stars'],
-                                        who: document['who'],
-                                        text: document['text']);
-                                  }).toList())))),
+                                      .map<Review>((document) => new Review(
+                                          stars: document['stars'],
+                                          who: document['who'],
+                                          text: document['text']))
+                                      .toList())))),
                   child:
                       Text('Reviews', style: TextStyle(color: Colors.orange)),
                   //color: Colors.blueGrey,
@@ -169,22 +168,7 @@ class HomeBusinessState extends State<HomeBusiness> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => UpdateDish(
-                                oldDish: new Dish(
-                                    allergens: doc.data['allergens'],
-                                    description: doc.data['description'],
-                                    ingredients: doc.data['ingredients'],
-                                    name: doc.data['name'],
-                                    uid: doc.data['uid'],
-                                    owner: doc.data['owner'],
-                                    price: doc.data['price'],
-                                    reviews: doc.data['reviews']
-                                        .map<Review>((document) {
-                                      return new Review(
-                                          stars: document['stars'],
-                                          who: document['who'],
-                                          text: document['text']);
-                                    }).toList()))));
+                            builder: (context) => UpdateDish(oldDish: doc)));
                   },
                   child: Text('Update', style: TextStyle(color: Colors.orange)),
                   //color: Colors.green,
@@ -279,7 +263,15 @@ class HomeBusinessState extends State<HomeBusiness> {
                           : false)
                       .map((doc) => buildItem(doc, deviceData))
                       .toList());
+
             } else {
+
+              Firestore.instance
+                  .collection('talks')
+                  .where("topic", isEqualTo: "flutter")
+                  .snapshots()
+                  .listen((data) =>
+                  data.documents.forEach((doc) => print(doc["title"])));
               return SizedBox();
             }
           },

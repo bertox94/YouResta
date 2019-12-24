@@ -10,7 +10,7 @@ import 'package:youresta/loading.dart';
 import 'commons.dart';
 
 class UpdateDish extends StatefulWidget {
-  final Dish oldDish;
+  final DocumentSnapshot oldDish;
 
   UpdateDish({this.oldDish});
 
@@ -24,45 +24,14 @@ class UpdateDishState extends State<UpdateDish> {
   String id;
   final formKey = GlobalKey<FormState>();
   Dish dish = new Dish();
-  bool loaded = false;
-
-  TextFormField buildTextFormField() {
-    return TextFormField(
-      decoration: InputDecoration(
-        border: InputBorder.none,
-        hintText: 'name',
-        fillColor: Colors.grey[300],
-        filled: true,
-      ),
-      validator: (value) {
-        if (value.isEmpty) {
-          return 'Please enter some text';
-        }
-        return null;
-      },
-      onSaved: (value) {},
-    );
-  }
-
-  CustomUser buildItem(DocumentSnapshot doc) {
-    return new CustomUser(
-        uid: doc.data['uid'],
-        name: doc.data['name'],
-        isBusiness: doc.data['isBusiness']);
-  }
 
   @override
   Widget build(BuildContext context) {
-    if (!loaded) {
-      dish.name = widget.oldDish.name;
-      dish.description = widget.oldDish.description;
-      dish.price = widget.oldDish.price;
-      dish.allergens = widget.oldDish.allergens;
-      dish.ingredients = widget.oldDish.ingredients;
-      dish.owner = widget.oldDish.owner;
-      dish.uid = widget.oldDish.uid;
-      loaded = true;
-    }
+    dish.name = widget.oldDish['name'];
+    dish.description = widget.oldDish['description'];
+    dish.price = widget.oldDish['price'];
+    dish.allergens = widget.oldDish['allergens'];
+    dish.ingredients = widget.oldDish['ingredients'];
 
     return Scaffold(
         backgroundColor: Colors.orange[100],
@@ -89,26 +58,24 @@ class UpdateDishState extends State<UpdateDish> {
                 children: <Widget>[
                   SizedBox(height: 10),
                   Commons.buildDishNameField(
-                    widget.oldDish.name,
+                    dish.name,
                     (val) {
                       dish.name = val;
                     },
                   ),
                   Commons.buildDishPriceField(
-                    widget.oldDish.price.toString(),
+                    dish.price.toString(),
                     (val) {
                       dish.price = int.parse(val);
                     },
                   ),
-                  Commons.buildIngredientsField(widget.oldDish.ingredients,
-                      (val) {
+                  Commons.buildIngredientsField(dish.ingredients, (val) {
                     dish.ingredients = val;
                   }),
-                  Commons.buildDescriptionField(widget.oldDish.description,
-                      (val) {
+                  Commons.buildDescriptionField(dish.description, (val) {
                     dish.description = val;
                   }),
-                  Commons.buildAllergensField(widget.oldDish.allergens, (val) {
+                  Commons.buildAllergensField(dish.allergens, (val) {
                     dish.allergens = val;
                   }),
                   Container(
@@ -136,7 +103,7 @@ class UpdateDishState extends State<UpdateDish> {
 
       await Firestore.instance
           .collection('dishes')
-          .document(widget.oldDish.uid)
+          .document(widget.oldDish['uid'])
           .updateData({
         'allergens': dish.allergens,
         'price': dish.price,

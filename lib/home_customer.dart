@@ -70,8 +70,7 @@ class HomeCustomerState extends State<HomeCustomer> {
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   child: CircleAvatar(
                     radius: 25.0,
-                    backgroundColor: Colors.brown[100],
-                    backgroundImage: AssetImage(doc['picture']),
+                    backgroundImage: AssetImage('assets/${doc['picture']}'),
                   ),
                 ),
                 Padding(
@@ -151,17 +150,7 @@ class HomeCustomerState extends State<HomeCustomer> {
                   onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DishDetailScreen(
-                                dish: new Dish(
-                                  allergens: doc.data['allergens'],
-                                  description: doc.data['description'],
-                                  ingredients: doc.data['ingredients'],
-                                  name: doc.data['name'],
-                                  uid: doc.data['uid'],
-                                  owner: doc.data['owner'],
-                                  price: doc.data['price'],
-                                ),
-                              ))),
+                          builder: (context) => DishDetailScreen(dish: doc))),
                   child: Text('Detail', style: TextStyle(color: Colors.orange)),
                   //color: Colors.blueGrey,
                 ),
@@ -171,22 +160,15 @@ class HomeCustomerState extends State<HomeCustomer> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => ReviewScreenEditable(
-                                user: widget.customUser,
+                                user: widget.customUser.name,
                                 dish: new Dish(
-                                    allergens: doc.data['allergens'],
-                                    description: doc.data['description'],
-                                    ingredients: doc.data['ingredients'],
-                                    name: doc.data['name'],
                                     uid: doc.data['uid'],
-                                    owner: doc.data['owner'],
-                                    price: doc.data['price'],
                                     reviews: doc.data['reviews']
-                                        .map<Review>((document) {
-                                      return new Review(
-                                          stars: document['stars'],
-                                          who: document['who'],
-                                          text: document['text']);
-                                    }).toList()))));
+                                        .map<Review>((document) => new Review(
+                                            stars: document['stars'],
+                                            who: document['who'],
+                                            text: document['text']))
+                                        .toList()))));
                   },
                   child:
                       Text('Reviews', style: TextStyle(color: Colors.orange)),

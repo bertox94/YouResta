@@ -1,16 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:youresta/model/dish.dart';
 import 'package:youresta/model/review.dart';
-import 'package:youresta/insert_dish.dart';
-import 'package:youresta/update_dish.dart';
-import 'package:youresta/auth_service.dart';
 
-class ReviewScreen extends StatelessWidget {
-  final Dish dish;
+class FixedReviewScreen extends StatelessWidget {
+  final List<Review> reviews;
 
-  ReviewScreen({this.dish});
+  FixedReviewScreen({this.reviews});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +39,7 @@ class ReviewScreen extends StatelessWidget {
         appBar: AppBar(backgroundColor: Colors.deepOrange,),
         body: ListView(
             padding: EdgeInsets.all(8),
-            children: dish.reviews.map((doc) => buildItem(doc)).toList()));
+            children: reviews.map((doc) => buildItem(doc)).toList()));
   }
 }
 

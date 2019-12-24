@@ -66,8 +66,7 @@ class HomeBusinessState extends State<HomeBusiness> {
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   child: CircleAvatar(
                     radius: 25.0,
-                    backgroundColor: Colors.brown[100],
-                    backgroundImage: AssetImage(doc['picture']),
+                    backgroundImage: AssetImage('assets/${doc['picture']}'),
                   ),
                 ),
                 Column(
@@ -144,21 +143,13 @@ class HomeBusinessState extends State<HomeBusiness> {
                   onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ReviewScreen(
-                              dish: new Dish(
-                                  allergens: doc.data['allergens'],
-                                  description: doc.data['description'],
-                                  ingredients: doc.data['ingredients'],
-                                  name: doc.data['name'],
-                                  uid: doc.data['uid'],
-                                  owner: doc.data['owner'],
-                                  price: doc.data['price'],
-                                  reviews: doc.data['reviews']
-                                      .map<Review>((document) => new Review(
-                                          stars: document['stars'],
-                                          who: document['who'],
-                                          text: document['text']))
-                                      .toList())))),
+                          builder: (context) => FixedReviewScreen(
+                              reviews: doc.data['reviews']
+                                  .map<Review>((document) => new Review(
+                                      stars: document['stars'],
+                                      who: document['who'],
+                                      text: document['text']))
+                                  .toList()))),
                   child:
                       Text('Reviews', style: TextStyle(color: Colors.orange)),
                   //color: Colors.blueGrey,
@@ -170,7 +161,8 @@ class HomeBusinessState extends State<HomeBusiness> {
                         MaterialPageRoute(
                             builder: (context) => UpdateDish(oldDish: doc)));
                   },
-                  child: Text('Update/Detail', style: TextStyle(color: Colors.orange)),
+                  child: Text('Update/Detail',
+                      style: TextStyle(color: Colors.orange)),
                   //color: Colors.green,
                 ),
                 SizedBox(width: 8),
@@ -183,26 +175,6 @@ class HomeBusinessState extends State<HomeBusiness> {
             )
           ],
         ));
-  }
-
-  TextFormField buildTextFormField() {
-    return TextFormField(
-      onChanged: (val) {
-        setState(() => name = val);
-      },
-      decoration: InputDecoration(
-        border: InputBorder.none,
-        hintText: 'name',
-        fillColor: Colors.grey[300],
-        filled: true,
-      ),
-      validator: (value) {
-        if (value.isEmpty) {
-          return 'Please enter some text';
-        }
-        return null;
-      },
-    );
   }
 
   @override

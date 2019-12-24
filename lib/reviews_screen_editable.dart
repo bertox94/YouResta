@@ -7,7 +7,7 @@ import 'package:youresta/model/review.dart';
 
 class ReviewScreenEditable extends StatefulWidget {
   final Dish dish;
-  final CustomUser user;
+  final String user;
 
   ReviewScreenEditable({this.dish, this.user});
 
@@ -112,20 +112,12 @@ class _ReviewScreenEditableState extends State<ReviewScreenEditable> {
     }
 
     void saveReview() async {
-      /*  sync may be problematic
-      
-    DocumentSnapshot snapshot = await Firestore.instance
-          .collection('dishes')
-          .document(widget.dish.uid)
-          .get();
-    List<Review> reviews = snapshot.data['reviews'];
-     */
 
-      review.who = widget.user.name;
+      review.who = widget.user;
 
       int selected;
       for (int i = 0; i < widget.dish.reviews.length; i++) {
-        if (widget.dish.reviews.elementAt(i).who == widget.user.name) {
+        if (widget.dish.reviews.elementAt(i).who == widget.user) {
           selected = i;
         }
       }

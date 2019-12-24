@@ -1,14 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:youresta/model/dish.dart';
 
 class DishDetailScreen extends StatelessWidget {
-  final Dish dish;
+  final DocumentSnapshot dish;
 
   DishDetailScreen({this.dish});
 
   @override
   Widget build(BuildContext context) {
-    Card buildItem(Dish dish) {
+    Card buildItem(DocumentSnapshot dish) {
       return Card(
         child: Padding(
           padding: const EdgeInsets.all(8.0),

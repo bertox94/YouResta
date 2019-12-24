@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:youresta/custom_user.dart';
-import 'package:youresta/dish.dart';
-import 'package:youresta/auth.dart';
+import 'package:youresta/model/custom_user.dart';
+import 'package:youresta/model/dish.dart';
+import 'package:youresta/auth_service.dart';
 import 'package:youresta/loading.dart';
 import 'package:flutter/material.dart';
 
@@ -159,6 +159,7 @@ class _RegisterState extends State<Register> {
                         child: RaisedButton(
                           onPressed: () async {
                             if (_formKey.currentState.validate()) {
+                              //_formKey.currentState.save();
                               setState(() => loading = true);
                               dynamic result =
                                   await _auth.registerWithEmailAndPassword(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:youresta/dish.dart';
+import 'package:youresta/model/dish.dart';
 
 class DishDetailScreen extends StatelessWidget {
   final Dish dish;

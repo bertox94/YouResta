@@ -1,4 +1,4 @@
-import 'package:youresta/auth.dart';
+import 'package:youresta/auth_service.dart';
 import 'package:youresta/loading.dart';
 import 'package:flutter/material.dart';
 
@@ -80,6 +80,7 @@ class _SignInState extends State<SignIn> {
                         child: RaisedButton(
                           onPressed: () async {
                             if (_formKey.currentState.validate()) {
+                              //_formKey.currentState.save();
                               setState(() => loading = true);
                               dynamic result = await _auth
                                   .signInWithEmailAndPassword(email, password);

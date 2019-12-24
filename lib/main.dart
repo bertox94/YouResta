@@ -1,7 +1,7 @@
 import 'package:youresta/home_business.dart';
 import 'package:youresta/home_customer.dart';
 import 'package:youresta/wrapper.dart';
-import 'package:youresta/auth.dart';
+import 'package:youresta/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:youresta/loading.dart';

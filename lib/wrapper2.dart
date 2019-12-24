@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:youresta/custom_user.dart';
+import 'package:youresta/model/custom_user.dart';
 import 'package:youresta/loading.dart';
 
 import 'home_business.dart';

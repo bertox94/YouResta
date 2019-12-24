@@ -1,4 +1,4 @@
-import 'package:youresta/review.dart';
+import 'package:youresta/model/review.dart';
 
 class Dish {
   String allergens;
@@ -8,10 +8,8 @@ class Dish {
   String name;
   String ingredients;
   String owner;
-  //String type; carne o pesce, sulla abse di questo sceglo l'avatar
+  String picture;
   List<Review> reviews;
-
-  //final String picture;
 
   Dish({
     this.uid,
@@ -22,6 +20,6 @@ class Dish {
     this.ingredients,
     this.owner,
     this.reviews,
-    //this.picture,
+    this.picture,
   });
 }

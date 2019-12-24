@@ -1,11 +1,13 @@
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
-import 'package:youresta/custom_user.dart';
-import 'package:youresta/dish.dart';
-import 'package:youresta/review.dart';
-import 'package:youresta/auth.dart';
+import 'package:youresta/model/custom_user.dart';
+import 'package:youresta/model/dish.dart';
+import 'package:youresta/model/review.dart';
+import 'package:youresta/auth_service.dart';
 import 'package:youresta/loading.dart';
 
 class InsertDish extends StatefulWidget {
@@ -227,6 +229,7 @@ class InsertDishState extends State<InsertDish> {
 
   void createData() async {
     if (_formKey.currentState.validate()) {
+      //_formKey.currentState.save();
       DocumentReference ref = await db.collection('dishes').add({});
 
       await db.collection('dishes').document(ref.documentID).updateData({
@@ -234,6 +237,7 @@ class InsertDishState extends State<InsertDish> {
         'allergens': dish.allergens,
         'price': dish.price,
         'description': dish.description,
+        'picture': 'chef-hat-${1 + Random().nextInt(9)}.jpg',
         'name': dish.name,
         'ingredients': dish.ingredients,
         'owner': widget.user.name,

@@ -2,13 +2,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:share/share.dart';
-import 'package:youresta/custom_user.dart';
-import 'package:youresta/dish.dart';
-import 'package:youresta/review.dart';
+import 'package:youresta/model/custom_user.dart';
+import 'package:youresta/model/dish.dart';
+import 'package:youresta/model/review.dart';
 import 'package:youresta/insert_dish.dart';
 import 'package:youresta/update_dish.dart';
 import 'package:youresta/reviews_screen_fixed.dart';
-import 'package:youresta/auth.dart';
+import 'package:youresta/auth_service.dart';
 
 import 'dish_detail_screen.dart';
 import 'reviews_screen_editable.dart';
@@ -71,7 +71,7 @@ class HomeCustomerState extends State<HomeCustomer> {
                   child: CircleAvatar(
                     radius: 25.0,
                     backgroundColor: Colors.brown[100],
-                    backgroundImage: AssetImage('assets/coffee_icon.png'),
+                    backgroundImage: AssetImage(doc['picture']),
                   ),
                 ),
                 Padding(

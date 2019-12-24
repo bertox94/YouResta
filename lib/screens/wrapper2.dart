@@ -24,7 +24,7 @@ class Wrapper2 extends StatelessWidget {
         if (!snapshot.hasData) {
           return Loading();
         } else if (snapshot.hasError) {
-          throw new Exception('\nSomething went wrong :(');
+          throw new Exception('\nSomething during registration phase went wrong :(');
         } else if (customUser.isBusiness) {
           return HomeBusiness(customUser: customUser,firebaseUser: user);
         } else {

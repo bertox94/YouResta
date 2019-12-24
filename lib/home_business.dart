@@ -9,6 +9,8 @@ import 'package:youresta/update_dish.dart';
 import 'package:youresta/reviews_screen_fixed.dart';
 import 'package:youresta/auth_service.dart';
 
+import 'commons.dart';
+
 class HomeBusiness extends StatefulWidget {
   final CustomUser user;
 
@@ -22,7 +24,6 @@ class HomeBusiness extends StatefulWidget {
 
 class HomeBusinessState extends State<HomeBusiness> {
   final AuthService _auth = AuthService();
-  final formKey = GlobalKey<FormState>();
   String name;
   int randomNumber = -1;
 
@@ -63,76 +64,26 @@ class HomeBusinessState extends State<HomeBusiness> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: CircleAvatar(
-                    radius: 25.0,
-                    backgroundImage: AssetImage('assets/${doc['picture']}'),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Commons.buildAvatar(doc)),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Commons.buildTextField(
+                          context, doc, 'Name', 'name', '', true, false),
+                      Commons.buildTextField(
+                          context, doc, 'Price', 'price', '€', true, false),
+                      Commons.buildTextField(context, doc, 'Allergens',
+                          'allergens', '', true, false),
+                      Commons.buildTextField(context, doc, 'Description',
+                          'description', '', false, false),
+                      Commons.buildTextField(context, doc, 'Ingredients',
+                          'ingredients', '', false, false),
+                      SizedBox(height: 6),
+                    ],
                   ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.65,
-                      child: Text(
-                        'name: ${doc.data['name']}',
-                        maxLines: (MediaQuery.of(context).orientation ==
-                                Orientation.portrait
-                            ? 1
-                            : null),
-                        softWrap: (MediaQuery.of(context).orientation ==
-                                Orientation.portrait
-                            ? false
-                            : true),
-                        overflow: (MediaQuery.of(context).orientation ==
-                                Orientation.portrait
-                            ? TextOverflow.fade
-                            : null),
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.65,
-                      child: Text(
-                        'desc: ${doc.data['description']}',
-                        maxLines: (MediaQuery.of(context).orientation ==
-                                Orientation.portrait
-                            ? 1
-                            : null),
-                        softWrap: (MediaQuery.of(context).orientation ==
-                                Orientation.portrait
-                            ? false
-                            : true),
-                        overflow: (MediaQuery.of(context).orientation ==
-                                Orientation.portrait
-                            ? TextOverflow.fade
-                            : null),
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.65,
-                      child: Text(
-                        'cost: ${doc.data['price']}€',
-                        maxLines: (MediaQuery.of(context).orientation ==
-                                Orientation.portrait
-                            ? 1
-                            : null),
-                        softWrap: (MediaQuery.of(context).orientation ==
-                                Orientation.portrait
-                            ? false
-                            : true),
-                        overflow: (MediaQuery.of(context).orientation ==
-                                Orientation.portrait
-                            ? TextOverflow.fade
-                            : null),
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ),
-                    buildAdditional1(doc, deviceData),
-                    buildAdditional2(doc, deviceData),
-                    SizedBox(height: 6),
-                  ],
                 ),
               ],
             ),

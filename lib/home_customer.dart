@@ -45,17 +45,17 @@ class HomeCustomerState extends State<HomeCustomer> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Commons.buildTextField(
-                          context, doc, 'Name', 'name', '', true),
+                          context, doc, 'Name', 'name', '', true, false),
                       Commons.buildTextField(
-                          context, doc, 'Price', 'price', '€', true),
-                      Commons.buildTextField(
-                          context, doc, 'Allergens', 'allergens', '', true),
+                          context, doc, 'Price', 'price', '€', true, false),
+                      Commons.buildTextField(context, doc, 'Allergens',
+                          'allergens', '', true, false),
                       Commons.buildTextField(context, doc, 'Description',
-                          'description', '', false),
+                          'description', '', false, false),
                       Commons.buildTextField(context, doc, 'Ingredients',
-                          'ingredients', '', false),
+                          'ingredients', '', false, false),
                       Commons.buildTextField(
-                          context, doc, 'Owner', 'owner', '', false),
+                          context, doc, 'Owner', 'owner', '', false, false),
                       SizedBox(height: 6),
                     ],
                   ),

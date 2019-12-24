@@ -149,29 +149,48 @@ class Commons {
   }
 
   static Container buildTextField(BuildContext context, DocumentSnapshot doc,
-      String arg1, String arg2, String arg3, bool required) {
-    if (required ||
-        MediaQuery.of(context).orientation == Orientation.landscape) {
+      String arg1, String arg2, String arg3, bool required, bool detailScreen) {
+    Orientation orientation = MediaQuery.of(context).orientation;
+
+    if (!detailScreen && orientation == Orientation.portrait) {
+      if (required) {
+        return Container(
+          width: MediaQuery.of(context).size.width * 0.65,
+          child: Text(
+            '$arg1: ${doc.data[arg2]}$arg3',
+            maxLines: 1,
+            softWrap: false,
+            overflow: TextOverflow.fade,
+            style: TextStyle(fontSize: 20),
+          ),
+        );
+      } else
+        return Container(
+          width: 0,
+          height: 0,
+        );
+    } else if (!detailScreen && orientation == Orientation.landscape) {
       return Container(
         width: MediaQuery.of(context).size.width * 0.65,
         child: Text(
           '$arg1: ${doc.data[arg2]}$arg3',
-          maxLines: (MediaQuery.of(context).orientation == Orientation.portrait
-              ? 1
-              : null),
-          softWrap: (MediaQuery.of(context).orientation == Orientation.portrait
-              ? false
-              : true),
-          overflow: (MediaQuery.of(context).orientation == Orientation.portrait
-              ? TextOverflow.fade
-              : null),
+          maxLines: null,
+          softWrap: true,
+          overflow: null,
           style: TextStyle(fontSize: 20),
         ),
       );
-    } else
+    } else {
       return Container(
-        width: 0,
-        height: 0,
+        width: MediaQuery.of(context).size.width * 0.65,
+        child: Text(
+          '$arg1: ${doc.data[arg2]}$arg3',
+          maxLines: null,
+          softWrap: true,
+          overflow: null,
+          style: TextStyle(fontSize: 20),
+        ),
       );
+    }
   }
 }

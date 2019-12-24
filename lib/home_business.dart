@@ -170,7 +170,7 @@ class HomeBusinessState extends State<HomeBusiness> {
                         MaterialPageRoute(
                             builder: (context) => UpdateDish(oldDish: doc)));
                   },
-                  child: Text('Update', style: TextStyle(color: Colors.orange)),
+                  child: Text('Update/Detail', style: TextStyle(color: Colors.orange)),
                   //color: Colors.green,
                 ),
                 SizedBox(width: 8),
@@ -246,32 +246,18 @@ class HomeBusinessState extends State<HomeBusiness> {
           ],
         ),
         body: StreamBuilder<QuerySnapshot>(
-          stream: Firestore.instance.collection('dishes').snapshots(),
+          stream: Firestore.instance
+              .collection('dishes')
+              .where('owner', isEqualTo: widget.user.name)
+              .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView(
                   padding: EdgeInsets.all(8),
                   children: snapshot.data.documents
-                      .where((x) => (x.data['owner']
-                                  .toString()
-                                  .toLowerCase()
-                                  .trim()
-                                  .compareTo(
-                                      widget.user.name.toLowerCase().trim())) ==
-                              0
-                          ? true
-                          : false)
                       .map((doc) => buildItem(doc, deviceData))
                       .toList());
-
             } else {
-
-              Firestore.instance
-                  .collection('talks')
-                  .where("topic", isEqualTo: "flutter")
-                  .snapshots()
-                  .listen((data) =>
-                  data.documents.forEach((doc) => print(doc["title"])));
               return SizedBox();
             }
           },

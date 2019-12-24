@@ -87,8 +87,11 @@ class UpdateDishState extends State<UpdateDish> {
                             backgroundColor: Colors.deepOrange,
                             elevation: 5,
                             onPressed: () {
-                              updateData();
-                              Navigator.pop(context);
+                              if (formKey.currentState.validate()) {
+                                formKey.currentState.save();
+                                updateData();
+                                Navigator.pop(context);
+                              }
                             },
                             child: new Icon(Icons.save),
                           ),
@@ -98,19 +101,15 @@ class UpdateDishState extends State<UpdateDish> {
   }
 
   void updateData() async {
-    if (formKey.currentState.validate()) {
-      formKey.currentState.save();
-
-      await Firestore.instance
-          .collection('dishes')
-          .document(widget.oldDish['uid'])
-          .updateData({
-        'allergens': dish.allergens,
-        'price': dish.price,
-        'description': dish.description,
-        'name': dish.name,
-        'ingredients': dish.ingredients,
-      });
-    }
+    await Firestore.instance
+        .collection('dishes')
+        .document(widget.oldDish['uid'])
+        .updateData({
+      'allergens': dish.allergens,
+      'price': dish.price,
+      'description': dish.description,
+      'name': dish.name,
+      'ingredients': dish.ingredients,
+    });
   }
 }

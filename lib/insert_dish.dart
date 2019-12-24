@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
+import 'package:youresta/commons.dart';
 import 'package:youresta/model/custom_user.dart';
 import 'package:youresta/model/dish.dart';
 import 'package:youresta/model/review.dart';
@@ -24,7 +25,7 @@ class InsertDish extends StatefulWidget {
 class InsertDishState extends State<InsertDish> {
   String id;
   final db = Firestore.instance;
-  final _formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
   Dish dish = new Dish();
 
   TextFormField buildTextFormField() {
@@ -73,15 +74,32 @@ class InsertDishState extends State<InsertDish> {
           actions: <Widget>[],
         ),
         body: Form(
-            key: _formKey,
+            key: formKey,
             child: ListView(
                 padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                 children: <Widget>[
                   SizedBox(height: 10),
-                  build4(),
-                  build2(),
-                  build3(),
-                  build1(),
+                  Commons.buildDishNameField(
+                    '',
+                    (val) {
+                      dish.name = val;
+                    },
+                  ),
+                  Commons.buildDishPriceField(
+                    '',
+                    (val) {
+                      dish.price = int.parse(val);
+                    },
+                  ),
+                  Commons.buildIngredientsField('', (val) {
+                    dish.ingredients = val;
+                  }),
+                  Commons.buildDescriptionField('', (val) {
+                    dish.description = val;
+                  }),
+                  Commons.buildAllergensField('', (val) {
+                    dish.allergens = val;
+                  }),
                   Container(
                       padding: EdgeInsets.fromLTRB(0, 20, 10, 0),
                       child: Row(
@@ -99,137 +117,11 @@ class InsertDishState extends State<InsertDish> {
                         ],
                       ))
                 ])));
-
-    return Loading();
-    ;
-  }
-
-  TextFormField build1() {
-    return TextFormField(
-        keyboardType: TextInputType.multiline,
-        maxLines: null,
-        validator: (val) => val.isEmpty ? 'Enter an email' : null,
-        onChanged: (val) {
-          setState(() => dish.allergens = val);
-        },
-        obscureText: false,
-        style: TextStyle(
-            fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white),
-        decoration: InputDecoration(
-          icon: new Icon(Icons.invert_colors),
-          //contentPadding: EdgeInsets.fromLTRB(10.0, 15.0, 20.0, 15.0),
-          hintText: 'Allergens',
-          hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
-          //border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-        ));
-  }
-
-  TextFormField build2() {
-    return TextFormField(
-        keyboardType: TextInputType.number,
-        inputFormatters: <TextInputFormatter>[
-          WhitelistingTextInputFormatter.digitsOnly
-        ],
-        maxLines: null,
-        validator: (val) => val.isEmpty ? 'Enter an email' : null,
-        onChanged: (val) {
-          setState(() => dish.price = int.parse(val));
-        },
-        obscureText: false,
-        style: TextStyle(
-            fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white),
-        decoration: InputDecoration(
-          icon: new Icon(Icons.euro_symbol),
-          //contentPadding: EdgeInsets.fromLTRB(10.0, 15.0, 20.0, 15.0),
-          hintText: 'Price',
-          hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
-          //border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-        ));
-  }
-
-  TextFormField build3() {
-    return TextFormField(
-        keyboardType: TextInputType.multiline,
-        maxLines: null,
-        validator: (val) => val.isEmpty ? 'Enter an email' : null,
-        onChanged: (val) {
-          setState(() => dish.description = val);
-        },
-        obscureText: false,
-        style: TextStyle(
-            fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white),
-        decoration: InputDecoration(
-          icon: new Icon(Icons.description),
-          //contentPadding: EdgeInsets.fromLTRB(10.0, 15.0, 20.0, 15.0),
-          hintText: 'Description',
-          hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
-          //border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-        ));
-  }
-
-  TextFormField build4() {
-    return TextFormField(
-        keyboardType: TextInputType.multiline,
-        maxLines: null,
-        validator: (val) => val.isEmpty ? 'Enter an email' : null,
-        onChanged: (val) {
-          setState(() => dish.name = val);
-        },
-        obscureText: false,
-        style: TextStyle(
-            fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white),
-        decoration: InputDecoration(
-          icon: new Icon(Icons.edit),
-          //contentPadding: EdgeInsets.fromLTRB(10.0, 15.0, 20.0, 15.0),
-          hintText: 'Dish name',
-          hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
-          //border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-        ));
-  }
-
-  TextFormField build5() {
-    return TextFormField(
-        keyboardType: TextInputType.multiline,
-        maxLines: null,
-        validator: (val) => val.isEmpty ? 'Enter an email' : null,
-        onChanged: (val) {
-          //setState(() => email = val);
-        },
-        obscureText: false,
-        style: TextStyle(
-            fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white),
-        decoration: InputDecoration(
-          icon: new Icon(Icons.mail),
-          //contentPadding: EdgeInsets.fromLTRB(10.0, 15.0, 20.0, 15.0),
-          hintText: 'Email',
-          hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
-          //border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-        ));
-  }
-
-  TextFormField build6() {
-    return TextFormField(
-        keyboardType: TextInputType.multiline,
-        maxLines: null,
-        validator: (val) => val.isEmpty ? 'Enter an email' : null,
-        onChanged: (val) {
-          //setState(() => email = val);
-        },
-        obscureText: false,
-        style: TextStyle(
-            fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white),
-        decoration: InputDecoration(
-          icon: new Icon(Icons.mail),
-          //contentPadding: EdgeInsets.fromLTRB(10.0, 15.0, 20.0, 15.0),
-          hintText: 'Email',
-          hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
-          //border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-        ));
   }
 
   void createData() async {
-    if (_formKey.currentState.validate()) {
-      //_formKey.currentState.save();
+    if (formKey.currentState.validate()) {
+      formKey.currentState.save();
       DocumentReference ref = await db.collection('dishes').add({});
 
       await db.collection('dishes').document(ref.documentID).updateData({

@@ -5,6 +5,8 @@ import 'package:youresta/auth_service.dart';
 import 'package:youresta/loading.dart';
 import 'package:flutter/material.dart';
 
+import 'commons.dart';
+
 class Register extends StatefulWidget {
   final Function toggleView;
 
@@ -16,7 +18,7 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   final AuthService _auth = AuthService();
-  final _formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
   String error = '';
   bool loading = false;
   bool isBusiness = false;
@@ -28,31 +30,28 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
-    CustomUser buildUser(DocumentSnapshot doc) {
-      return new CustomUser(
-          uid: doc.data['uid'],
-          name: doc.data['name'],
-          isBusiness: doc.data['isBusiness']);
-    }
-
     StreamBuilder buildName() {
       return StreamBuilder<QuerySnapshot>(
         stream: Firestore.instance.collection('custom_users').snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            List customUsers =
-                snapshot.data.documents.map((doc) => buildUser(doc)).toList();
-
             return TextFormField(
                 validator: (value) {
                   if (value == '') {
                     return 'The name must not be empty';
                   }
-                  for (int i = 0; i < customUsers.length; i++) {
-                    if (value.toLowerCase().trim() ==
-                        customUsers.elementAt(i).name.toLowerCase().trim())
-                      return 'This name is not available';
+
+                  if (snapshot.data.documents.any((x) => (x.data['name']
+                              .toString()
+                              .trim()
+                              .toLowerCase()
+                              .compareTo(name.trim().toLowerCase())) ==
+                          0
+                      ? true
+                      : false)) {
+                    return 'This name is not available';
                   }
+
                   return null;
                 },
                 onChanged: (val) {
@@ -77,63 +76,31 @@ class _RegisterState extends State<Register> {
       );
     }
 
-    TextFormField buildEmail() {
-      return TextFormField(
-          validator: (val) => val.isEmpty ? 'Enter an email' : null,
-          onChanged: (val) {
-            setState(() => email = val);
-          },
-          obscureText: false,
-          style: TextStyle(
-              fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white),
-          decoration: InputDecoration(
-            icon: new Icon(Icons.mail),
-            //contentPadding: EdgeInsets.fromLTRB(10.0, 15.0, 20.0, 15.0),
-            hintText: 'Email',
-            hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
-            //border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-          ));
-    }
-
-    TextFormField buildPassword() {
-      return TextFormField(
-        validator: (val) =>
-            val.length < 6 ? 'Enter a password 6+ chars long' : null,
-        onChanged: (val) {
-          setState(() => password = val);
-        },
-        obscureText: true,
-        style: TextStyle(
-            fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white),
-        decoration: InputDecoration(
-          icon: new Icon(Icons.lock),
-          //contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: "Password",
-          hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
-          //border:OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))
-        ),
-      );
-    }
-
     Form buildForm() {
       return Form(
-          key: _formKey,
+          key: formKey,
           child: Scrollbar(
             child: ListView(
               children: <Widget>[
-                SizedBox(height: 235.0),
+                SizedBox(height: 210.0),
                 buildName(),
-                buildEmail(),
-                buildPassword(),
+                Commons.buildEmail(
+                  (val) {
+                    email = val;
+                  },
+                ),
+                Commons.buildPassword(
+                  (val) {
+                    password = val;
+                  },
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Checkbox(
                       value: isBusiness,
                       onChanged: (bool value) {
-                        setState(() {
-                          isBusiness = value;
-                        });
+                        isBusiness = value;
                       },
                     ),
                     Text(
@@ -158,12 +125,15 @@ class _RegisterState extends State<Register> {
                         width: 120,
                         child: RaisedButton(
                           onPressed: () async {
-                            if (_formKey.currentState.validate()) {
-                              //_formKey.currentState.save();
+                            if (formKey.currentState.validate()) {
+                              formKey.currentState.save();
                               setState(() => loading = true);
                               dynamic result =
                                   await _auth.registerWithEmailAndPassword(
-                                      email, password, name.trim(), isBusiness);
+                                      email.trim(),
+                                      password.trim(),
+                                      name.trim(),
+                                      isBusiness);
 
                               if (result == null) {
                                 setState(() {

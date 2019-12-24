@@ -1,11 +1,11 @@
 import 'package:youresta/model/review.dart';
 
 class Dish {
+  String name;
+  int price;
   String allergens;
   String uid;
-  int price;
   String description;
-  String name;
   String ingredients;
   String owner;
   String picture;

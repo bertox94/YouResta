@@ -22,7 +22,7 @@ class HomeBusiness extends StatefulWidget {
 
 class HomeBusinessState extends State<HomeBusiness> {
   final AuthService _auth = AuthService();
-  final _formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
   String name;
   int randomNumber = -1;
 
@@ -170,7 +170,6 @@ class HomeBusinessState extends State<HomeBusiness> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => UpdateDish(
-                                user: widget.user,
                                 oldDish: new Dish(
                                     allergens: doc.data['allergens'],
                                     description: doc.data['description'],
@@ -273,9 +272,8 @@ class HomeBusinessState extends State<HomeBusiness> {
                                   .toString()
                                   .toLowerCase()
                                   .trim()
-                                  .compareTo(widget.user.name
-                                      .toLowerCase()
-                                      .trim())) ==
+                                  .compareTo(
+                                      widget.user.name.toLowerCase().trim())) ==
                               0
                           ? true
                           : false)
@@ -289,7 +287,9 @@ class HomeBusinessState extends State<HomeBusiness> {
   }
 
   void deleteData(DocumentSnapshot doc) async {
-    await Firestore.instance.collection('dishes').document(doc.documentID).delete();
+    await Firestore.instance
+        .collection('dishes')
+        .document(doc.documentID)
+        .delete();
   }
-
 }

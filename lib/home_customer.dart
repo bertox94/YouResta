@@ -26,7 +26,7 @@ class HomeCustomer extends StatefulWidget {
 
 class HomeCustomerState extends State<HomeCustomer> {
   final AuthService _auth = AuthService();
-  final _formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
   String name;
   int randomNumber = -1;
 

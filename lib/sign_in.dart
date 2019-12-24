@@ -2,6 +2,8 @@ import 'package:youresta/auth_service.dart';
 import 'package:youresta/loading.dart';
 import 'package:flutter/material.dart';
 
+import 'commons.dart';
+
 class SignIn extends StatefulWidget {
   final Function toggleView;
 
@@ -13,7 +15,7 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   final AuthService _auth = AuthService();
-  final _formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
   String error = '';
   bool loading = false;
   bool isBusiness = false;
@@ -24,54 +26,34 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-    TextFormField buildEmail() {
-      return TextFormField(
-          validator: (val) => val.isEmpty ? 'Enter an email' : null,
-          onChanged: (val) {
-            setState(() => email = val);
-          },
-          obscureText: false,
-          style: TextStyle(
-              fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white),
-          decoration: InputDecoration(
-            icon: new Icon(Icons.mail),
-            //contentPadding: EdgeInsets.fromLTRB(10.0, 15.0, 20.0, 15.0),
-            hintText: 'Email',
-            hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
-            //border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-          ));
-    }
-
-    TextFormField buildPassword() {
-      return TextFormField(
-        validator: (val) =>
-            val.length < 6 ? 'Enter a password 6+ chars long' : null,
-        onChanged: (val) {
-          setState(() => password = val);
-        },
-        obscureText: true,
-        style: TextStyle(
-            fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white),
-        decoration: InputDecoration(
-          icon: new Icon(Icons.lock),
-          //contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: "Password",
-          hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
-          //border:OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))
-        ),
-      );
-    }
-
     Form buildForm() {
       return Form(
-          key: _formKey,
+          key: formKey,
           child: Scrollbar(
             child: ListView(
               children: <Widget>[
                 SizedBox(height: 240.0),
-                buildEmail(),
-                buildPassword(),
-                SizedBox(height: 20.0),
+                Commons.buildEmail(
+                  (val) {
+                    email = val;
+                  },
+                ),
+                Commons.buildPassword(
+                  (val) {
+                    password = val;
+                  },
+                ),
+                SizedBox(height: 10.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      error,
+                      style: TextStyle(color: Colors.red, fontSize: 14.0),
+                    )
+                  ],
+                ),
+                SizedBox(height: 15.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
@@ -79,11 +61,12 @@ class _SignInState extends State<SignIn> {
                         width: 120,
                         child: RaisedButton(
                           onPressed: () async {
-                            if (_formKey.currentState.validate()) {
-                              //_formKey.currentState.save();
+                            if (formKey.currentState.validate()) {
+                              formKey.currentState.save();
                               setState(() => loading = true);
-                              dynamic result = await _auth
-                                  .signInWithEmailAndPassword(email, password);
+                              dynamic result =
+                                  await _auth.signInWithEmailAndPassword(
+                                      email.trim(), password.trim());
                               if (result == null) {
                                 setState(() {
                                   loading = false;
@@ -122,15 +105,6 @@ class _SignInState extends State<SignIn> {
                   ],
                 ),
                 SizedBox(height: 5.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      error,
-                      style: TextStyle(color: Colors.red, fontSize: 14.0),
-                    )
-                  ],
-                ),
                 SizedBox(height: 10.0),
               ],
             ),

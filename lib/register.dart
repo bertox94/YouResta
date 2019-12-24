@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:youresta/models/custom_user.dart';
-import 'package:youresta/models/dish.dart';
-import 'package:youresta/services/auth.dart';
-import 'package:youresta/shared/constants.dart';
-import 'package:youresta/shared/loading.dart';
+import 'package:youresta/custom_user.dart';
+import 'package:youresta/dish.dart';
+import 'package:youresta/auth.dart';
+import 'package:youresta/loading.dart';
 import 'package:flutter/material.dart';
 
 class Register extends StatefulWidget {
@@ -37,7 +36,7 @@ class _RegisterState extends State<Register> {
     }
 
     StreamBuilder buildName() {
-      return StreamBuilder(
+      return StreamBuilder<QuerySnapshot>(
         stream: Firestore.instance.collection('custom_users').snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -164,6 +163,7 @@ class _RegisterState extends State<Register> {
                               dynamic result =
                                   await _auth.registerWithEmailAndPassword(
                                       email, password, name.trim(), isBusiness);
+
                               if (result == null) {
                                 setState(() {
                                   loading = false;

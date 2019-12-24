@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:youresta/models/dish.dart';
-import 'package:youresta/models/review.dart';
-import 'package:youresta/screens/home/insert_dish.dart';
-import 'package:youresta/screens/home/update_dish.dart';
-import 'package:youresta/services/auth.dart';
+import 'package:youresta/dish.dart';
+import 'package:youresta/review.dart';
+import 'package:youresta/insert_dish.dart';
+import 'package:youresta/update_dish.dart';
+import 'package:youresta/auth.dart';
 
 class ReviewScreen extends StatelessWidget {
   final Dish dish;
@@ -49,23 +49,3 @@ class ReviewScreen extends StatelessWidget {
   }
 }
 
-/*
-        StreamBuilder<DocumentSnapshot>(
-          stream: Firestore.instance
-              .collection('dishes')
-              .document(dish.uid)
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return ListView(
-                  padding: EdgeInsets.all(8),
-                  children: snapshot.data.data['reviews']
-                      .map((doc) => buildItem(doc))
-                      .toList());
-            } else {
-              return SizedBox();
-            }
-          },
-        ));
-        
-             */

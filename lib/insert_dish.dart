@@ -2,29 +2,28 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
-import 'package:youresta/models/custom_user.dart';
-import 'package:youresta/models/dish.dart';
-import 'package:youresta/services/auth.dart';
-import 'package:youresta/shared/loading.dart';
+import 'package:youresta/custom_user.dart';
+import 'package:youresta/dish.dart';
+import 'package:youresta/review.dart';
+import 'package:youresta/auth.dart';
+import 'package:youresta/loading.dart';
 
-class UpdateDish extends StatefulWidget {
-  final FirebaseUser user;
-  final Dish oldDish;
+class InsertDish extends StatefulWidget {
+  final CustomUser user;
 
-  UpdateDish({this.user, this.oldDish});
+  InsertDish({this.user});
 
   @override
-  UpdateDishState createState() {
-    return UpdateDishState();
+  InsertDishState createState() {
+    return InsertDishState();
   }
 }
 
-class UpdateDishState extends State<UpdateDish> {
+class InsertDishState extends State<InsertDish> {
   String id;
   final db = Firestore.instance;
   final _formKey = GlobalKey<FormState>();
   Dish dish = new Dish();
-  bool loaded = false;
 
   TextFormField buildTextFormField() {
     return TextFormField(
@@ -53,86 +52,58 @@ class UpdateDishState extends State<UpdateDish> {
 
   @override
   Widget build(BuildContext context) {
-    //bool loaded = false;
-
-    if (!loaded) {
-      dish.name = widget.oldDish.name;
-      dish.description = widget.oldDish.description;
-      dish.price = widget.oldDish.price;
-      dish.allergens = widget.oldDish.allergens;
-      dish.ingredients = widget.oldDish.ingredients;
-      dish.owner = widget.oldDish.owner;
-      dish.uid = widget.oldDish.uid;
-      loaded = true;
-    }
-
-    return StreamBuilder(
-        stream: Firestore.instance.collection('custom_users').snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            List customUsers =
-                snapshot.data.documents.map((doc) => buildItem(doc)).toList();
-
-            CustomUser selected;
-
-            for (int i = 0; i < customUsers.length; i++) {
-              if (customUsers.elementAt(i).uid == widget.user.uid)
-                selected = customUsers.elementAt(i);
-            }
-
-            return Scaffold(
-                backgroundColor: Colors.orange[100],
-                appBar: AppBar(
-                  title: Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Image.asset(
-                          'assets/logo.png',
-                          scale: 40,
-                        ),
-                      ],
-                    ),
-                  ),
-                  backgroundColor: Colors.deepOrange,
-                  elevation: 0.0,
-                  actions: <Widget>[],
+    return Scaffold(
+        backgroundColor: Colors.orange[100],
+        appBar: AppBar(
+          title: Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Image.asset(
+                  'assets/logo.png',
+                  scale: 40,
                 ),
-                body: Form(
-                    key: _formKey,
-                    child: ListView(
-                        padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+              ],
+            ),
+          ),
+          backgroundColor: Colors.deepOrange,
+          elevation: 0.0,
+          actions: <Widget>[],
+        ),
+        body: Form(
+            key: _formKey,
+            child: ListView(
+                padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                children: <Widget>[
+                  SizedBox(height: 10),
+                  build4(),
+                  build2(),
+                  build3(),
+                  build1(),
+                  Container(
+                      padding: EdgeInsets.fromLTRB(0, 20, 10, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
-                          SizedBox(height: 10),
-                          build4(),
-                          build2(),
-                          build3(),
-                          build1(),
-                          Container(
-                              padding: EdgeInsets.fromLTRB(0, 20, 10, 0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: <Widget>[
-                                  FloatingActionButton(
-                                    backgroundColor: Colors.deepOrange,
-                                    elevation: 5,
-                                    onPressed: () {
-                                      updateData(selected);
-                                      Navigator.pop(context);
-                                    },
-                                    child: new Icon(Icons.save),
-                                  ),
-                                ],
-                              ))
-                        ])));
-          }
-          return Loading();
-        });
+                          FloatingActionButton(
+                            backgroundColor: Colors.deepOrange,
+                            elevation: 5,
+                            onPressed: () {
+                              createData();
+                              Navigator.pop(context);
+                            },
+                            child: new Icon(Icons.add),
+                          ),
+                        ],
+                      ))
+                ])));
+
+    return Loading();
+    ;
   }
 
   TextFormField build1() {
     return TextFormField(
-        initialValue: widget.oldDish.allergens,
         keyboardType: TextInputType.multiline,
         maxLines: null,
         validator: (val) => val.isEmpty ? 'Enter an email' : null,
@@ -153,7 +124,6 @@ class UpdateDishState extends State<UpdateDish> {
 
   TextFormField build2() {
     return TextFormField(
-        initialValue: widget.oldDish.price.toString(),
         keyboardType: TextInputType.number,
         inputFormatters: <TextInputFormatter>[
           WhitelistingTextInputFormatter.digitsOnly
@@ -177,7 +147,6 @@ class UpdateDishState extends State<UpdateDish> {
 
   TextFormField build3() {
     return TextFormField(
-        initialValue: widget.oldDish.description,
         keyboardType: TextInputType.multiline,
         maxLines: null,
         validator: (val) => val.isEmpty ? 'Enter an email' : null,
@@ -198,7 +167,6 @@ class UpdateDishState extends State<UpdateDish> {
 
   TextFormField build4() {
     return TextFormField(
-        initialValue: widget.oldDish.name,
         keyboardType: TextInputType.multiline,
         maxLines: null,
         validator: (val) => val.isEmpty ? 'Enter an email' : null,
@@ -257,14 +225,20 @@ class UpdateDishState extends State<UpdateDish> {
         ));
   }
 
-  void updateData(CustomUser selected) async {
-    await db.collection('dishes').document(widget.oldDish.uid).updateData({
-      'allergens': dish.allergens,
-      'price': dish.price,
-      'description': dish.description,
-      'name': dish.name,
-      'ingredients': dish.ingredients,
-      'owner': selected.name,
-    });
+  void createData() async {
+    if (_formKey.currentState.validate()) {
+      DocumentReference ref = await db.collection('dishes').add({});
+
+      await db.collection('dishes').document(ref.documentID).updateData({
+        'uid': ref.documentID,
+        'allergens': dish.allergens,
+        'price': dish.price,
+        'description': dish.description,
+        'name': dish.name,
+        'ingredients': dish.ingredients,
+        'owner': widget.user.name,
+        'reviews': new List<Review>(),
+      });
+    }
   }
 }

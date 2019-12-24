@@ -1,6 +1,5 @@
-import 'package:youresta/services/auth.dart';
-import 'package:youresta/shared/constants.dart';
-import 'package:youresta/shared/loading.dart';
+import 'package:youresta/auth.dart';
+import 'package:youresta/loading.dart';
 import 'package:flutter/material.dart';
 
 class SignIn extends StatefulWidget {

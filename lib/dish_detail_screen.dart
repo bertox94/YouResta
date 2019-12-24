@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:youresta/models/dish.dart';
+import 'package:youresta/dish.dart';
 
 class DishDetailScreen extends StatelessWidget {
   final Dish dish;
@@ -42,24 +42,3 @@ class DishDetailScreen extends StatelessWidget {
             children: {buildItem(dish)}.toList()));
   }
 }
-
-/*
-        StreamBuilder<DocumentSnapshot>(
-          stream: Firestore.instance
-              .collection('dishes')
-              .document(dish.uid)
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return ListView(
-                  padding: EdgeInsets.all(8),
-                  children: snapshot.data.data['reviews']
-                      .map((doc) => buildItem(doc))
-                      .toList());
-            } else {
-              return SizedBox();
-            }
-          },
-        ));
-
-             */

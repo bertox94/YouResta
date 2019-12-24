@@ -1,9 +1,9 @@
 import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:youresta/models/custom_user.dart';
-import 'package:youresta/models/dish.dart';
-import 'package:youresta/models/review.dart';
+import 'package:youresta/custom_user.dart';
+import 'package:youresta/dish.dart';
+import 'package:youresta/review.dart';
 
 class ReviewScreenEditable extends StatefulWidget {
   final Dish dish;

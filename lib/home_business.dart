@@ -1,19 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:youresta/models/custom_user.dart';
-import 'package:youresta/models/dish.dart';
-import 'package:youresta/models/review.dart';
-import 'package:youresta/screens/home/insert_dish.dart';
-import 'package:youresta/screens/home/update_dish.dart';
-import 'package:youresta/screens/reviews_screen_fixed.dart';
-import 'package:youresta/services/auth.dart';
+import 'package:youresta/custom_user.dart';
+import 'package:youresta/dish.dart';
+import 'package:youresta/review.dart';
+import 'package:youresta/insert_dish.dart';
+import 'package:youresta/update_dish.dart';
+import 'package:youresta/reviews_screen_fixed.dart';
+import 'package:youresta/auth.dart';
 
 class HomeBusiness extends StatefulWidget {
-  final FirebaseUser firebaseUser;
-  final CustomUser customUser;
+  final CustomUser user;
 
-  HomeBusiness({this.customUser, this.firebaseUser});
+  HomeBusiness({this.user});
 
   @override
   HomeBusinessState createState() {
@@ -23,7 +22,6 @@ class HomeBusiness extends StatefulWidget {
 
 class HomeBusinessState extends State<HomeBusiness> {
   final AuthService _auth = AuthService();
-  final db = Firestore.instance;
   final _formKey = GlobalKey<FormState>();
   String name;
   int randomNumber = -1;
@@ -172,7 +170,7 @@ class HomeBusinessState extends State<HomeBusiness> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => UpdateDish(
-                                user: widget.firebaseUser,
+                                user: widget.user,
                                 oldDish: new Dish(
                                     allergens: doc.data['allergens'],
                                     description: doc.data['description'],
@@ -250,7 +248,7 @@ class HomeBusinessState extends State<HomeBusiness> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => InsertDish(
-                              user: widget.firebaseUser,
+                              user: widget.user,
                             )));
               },
               icon: Icon(Icons.restaurant_menu),
@@ -265,7 +263,7 @@ class HomeBusinessState extends State<HomeBusiness> {
           ],
         ),
         body: StreamBuilder<QuerySnapshot>(
-          stream: db.collection('dishes').snapshots(),
+          stream: Firestore.instance.collection('dishes').snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView(
@@ -275,7 +273,7 @@ class HomeBusinessState extends State<HomeBusiness> {
                                   .toString()
                                   .toLowerCase()
                                   .trim()
-                                  .compareTo(widget.customUser.name
+                                  .compareTo(widget.user.name
                                       .toLowerCase()
                                       .trim())) ==
                               0
@@ -290,17 +288,8 @@ class HomeBusinessState extends State<HomeBusiness> {
         ));
   }
 
-
-  //how to get the element, however remind that you should use streams
-  void readData() async {
-    DocumentSnapshot snapshot =
-        await db.collection('CRUD').document('id').get();
-    print(snapshot.data['name']);
-  }
-
-
   void deleteData(DocumentSnapshot doc) async {
-    await db.collection('dishes').document(doc.documentID).delete();
+    await Firestore.instance.collection('dishes').document(doc.documentID).delete();
   }
 
 }

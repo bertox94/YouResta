@@ -2,22 +2,21 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:share/share.dart';
-import 'package:youresta/models/custom_user.dart';
-import 'package:youresta/models/dish.dart';
-import 'package:youresta/models/review.dart';
-import 'package:youresta/screens/home/insert_dish.dart';
-import 'package:youresta/screens/home/update_dish.dart';
-import 'package:youresta/screens/reviews_screen_fixed.dart';
-import 'package:youresta/services/auth.dart';
+import 'package:youresta/custom_user.dart';
+import 'package:youresta/dish.dart';
+import 'package:youresta/review.dart';
+import 'package:youresta/insert_dish.dart';
+import 'package:youresta/update_dish.dart';
+import 'package:youresta/reviews_screen_fixed.dart';
+import 'package:youresta/auth.dart';
 
-import '../dish_detail_screen.dart';
-import '../reviews_screen_editable.dart';
+import 'dish_detail_screen.dart';
+import 'reviews_screen_editable.dart';
 
 class HomeCustomer extends StatefulWidget {
-  final FirebaseUser firebaseUser;
   final CustomUser customUser;
 
-  HomeCustomer({this.customUser, this.firebaseUser});
+  HomeCustomer({this.customUser});
 
   @override
   HomeCustomerState createState() {
@@ -27,7 +26,6 @@ class HomeCustomer extends StatefulWidget {
 
 class HomeCustomerState extends State<HomeCustomer> {
   final AuthService _auth = AuthService();
-  final db = Firestore.instance;
   final _formKey = GlobalKey<FormState>();
   String name;
   int randomNumber = -1;
@@ -269,7 +267,7 @@ class HomeCustomerState extends State<HomeCustomer> {
           ],
         ),
         body: StreamBuilder<QuerySnapshot>(
-          stream: db.collection('dishes').snapshots(),
+          stream: Firestore.instance.collection('dishes').snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView(
@@ -282,53 +280,5 @@ class HomeCustomerState extends State<HomeCustomer> {
             }
           },
         ));
-  }
-
-  void createData() async {
-    if (_formKey.currentState.validate()) {
-      DocumentReference ref = await db
-          .collection('dishes')
-          .add({'name': '$name 😎', 'todo': randomTodo()});
-      print(ref.documentID);
-    }
-  }
-
-  //how to get the element, however remind that you should use streams
-  void readData() async {
-    DocumentSnapshot snapshot =
-        await db.collection('CRUD').document('id').get();
-    print(snapshot.data['name']);
-  }
-
-  void updateData(DocumentSnapshot doc) async {
-    await db
-        .collection('CRUD')
-        .document(doc.documentID)
-        .updateData({'todo': 'please 🤫'});
-  }
-
-  void deleteData(DocumentSnapshot doc) async {
-    await db.collection('dishes').document(doc.documentID).delete();
-  }
-
-  String randomTodo() {
-    randomNumber++;
-    randomNumber %= 4;
-    String todo;
-    switch (randomNumber) {
-      case 0:
-        todo = 'Like and subscribe 💩';
-        break;
-      case 1:
-        todo = 'Twitter @robertbrunhage 🤣';
-        break;
-      case 2:
-        todo = 'Patreon in the description 🤗';
-        break;
-      case 3:
-        todo = 'Leave a comment 🤓';
-        break;
-    }
-    return todo;
   }
 }

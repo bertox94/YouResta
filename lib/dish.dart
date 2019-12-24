@@ -1,4 +1,4 @@
-import 'package:youresta/models/review.dart';
+import 'package:youresta/review.dart';
 
 class Dish {
   String allergens;

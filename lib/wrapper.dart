@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:youresta/screens/authenticate/authenticate.dart';
+import 'package:youresta/authenticate.dart';
 import 'package:flutter/material.dart';
-import 'package:youresta/screens/home/home_customer.dart';
-import 'package:youresta/screens/wrapper2.dart';
+import 'package:youresta/home_customer.dart';
+import 'package:youresta/wrapper2.dart';
 
 class Wrapper extends StatelessWidget {
   @override

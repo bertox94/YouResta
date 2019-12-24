@@ -1,5 +1,5 @@
-import 'package:youresta/screens/authenticate/register.dart';
-import 'package:youresta/screens/authenticate/sign_in.dart';
+import 'package:youresta/register.dart';
+import 'package:youresta/sign_in.dart';
 import 'package:flutter/material.dart';
 
 class Authenticate extends StatefulWidget {

@@ -40,7 +40,7 @@ class _RegisterState extends State<Register> {
                   if (value == '') {
                     return 'The name must not be empty';
                   }
-
+                  //eventually register temporarily, or register everyone and add a field in firestore: valid_account, to be checked before login
                   if (snapshot.data.documents.any((x) => (x.data['name']
                               .toString()
                               .trim()

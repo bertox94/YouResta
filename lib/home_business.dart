@@ -1,13 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:youresta/model/custom_user.dart';
-import 'package:youresta/model/dish.dart';
-import 'package:youresta/model/review.dart';
-import 'package:youresta/insert_dish.dart';
-import 'package:youresta/update_dish.dart';
-import 'package:youresta/reviews_screen_fixed.dart';
+import 'package:flutter/material.dart';
 import 'package:youresta/auth_service.dart';
+import 'package:youresta/insert_dish.dart';
+import 'package:youresta/model/custom_user.dart';
+import 'package:youresta/model/review.dart';
+import 'package:youresta/reviews_screen_fixed.dart';
+import 'package:youresta/update_dish.dart';
 
 import 'commons.dart';
 
@@ -85,11 +83,14 @@ class HomeBusinessState extends State<HomeBusiness> {
                       Commons.buildTextField(context, doc, 'Price: ', 'price',
                           '€', 20, true, false),
                       Commons.buildTextField(context, doc, 'Allergens: ',
-                          'allergens', '', 20, true, false),
-                      Commons.buildTextField(context, doc, 'Description: ',
-                          'description', '', 20, false, false),
+                          'allergens', '', 20, false, false),
                       Commons.buildTextField(context, doc, 'Ingredients: ',
-                          'ingredients', '', 20, false, false),
+                          'ingredients', '', 20, true, false),
+                      SizedBox(
+                        height: 6,
+                      ),
+                      Commons.buildTextField(context, doc, '', 'description',
+                          '', 20, false, false),
                     ],
                   ),
                 ),
@@ -178,8 +179,34 @@ class HomeBusinessState extends State<HomeBusiness> {
             ),
           ],
         ),
-        body: ListView(
+        body: Stack(
           children: <Widget>[
+            StreamBuilder<QuerySnapshot>(
+              stream: Firestore.instance
+                  .collection('dishes')
+                  .where('owner', isEqualTo: widget.user.name)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return ListView(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 60,
+                      ),
+                      Column(
+                          children: snapshot.data.documents
+                              .where((x) => x['name']
+                                  .toLowerCase()
+                                  .contains(title.toLowerCase()))
+                              .map((doc) => buildItem(doc))
+                              .toList())
+                    ],
+                  );
+                } else {
+                  return SizedBox();
+                }
+              },
+            ),
             Padding(
               padding: EdgeInsets.all(8),
               child: TextField(
@@ -189,6 +216,8 @@ class HomeBusinessState extends State<HomeBusiness> {
                     });
                   },
                   decoration: InputDecoration(
+                    fillColor: Colors.blue[100],
+                    filled: true,
                     icon: new Icon(Icons.text_fields),
                     //contentPadding: EdgeInsets.fromLTRB(10.0, 15.0, 20.0, 15.0),
                     hintText: 'Search you dish here...',
@@ -196,25 +225,6 @@ class HomeBusinessState extends State<HomeBusiness> {
                     //border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
                   )),
             ),
-            StreamBuilder<QuerySnapshot>(
-              stream: Firestore.instance
-                  .collection('dishes')
-                  .where('owner', isEqualTo: widget.user.name)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Column(
-                      children: snapshot.data.documents
-                          .where((x) => x['name']
-                              .toLowerCase()
-                              .contains(title.toLowerCase()))
-                          .map((doc) => buildItem(doc))
-                          .toList());
-                } else {
-                  return SizedBox();
-                }
-              },
-            )
           ],
         ));
   }

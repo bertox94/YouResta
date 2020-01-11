@@ -33,10 +33,8 @@ class DishDetailScreen extends StatelessWidget {
                             context, doc, '', 'name', '', 26, true, true),
                         Commons.buildDisplayStars(Commons.averageStars(doc
                             .data['reviews']
-                            .map<Review>((document) => new Review(
-                                stars: document['stars'],
-                                who: document['who'],
-                                text: document['text']))
+                            .map<Review>(
+                                (document) => new Review(document: document))
                             .toList())),
                         SizedBox(
                           height: 6,
@@ -49,8 +47,8 @@ class DishDetailScreen extends StatelessWidget {
                             'description', '', 20, false, true),
                         Commons.buildTextField(context, doc, 'Ingredients: ',
                             'ingredients', '', 20, false, true),
-                        Commons.buildTextField(
-                            context, doc, 'Owner', 'owner', '', 20, false, false),
+                        Commons.buildTextField(context, doc, 'Owner', 'owner',
+                            '', 20, false, false),
                       ],
                     ),
                   ),

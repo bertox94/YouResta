@@ -75,12 +75,12 @@ class HomeBusinessState extends State<HomeBusiness> {
                           context, doc, '', 'name', '', 26, true, false),
                       Commons.buildDisplayStars(Commons.averageStars(doc
                           .data['reviews']
-                          .map<Review>((document) => new Review(
-                              stars: document['stars'],
-                              who: document['who'],
-                              text: document['text']))
+                          .map<Review>(
+                              (document) => new Review(document: document))
                           .toList())),
-                      SizedBox(height: 6,),
+                      SizedBox(
+                        height: 6,
+                      ),
                       Commons.buildTextField(context, doc, 'Price: ', 'price',
                           '€', 20, true, false),
                       Commons.buildTextField(context, doc, 'Allergens: ',
@@ -103,10 +103,8 @@ class HomeBusinessState extends State<HomeBusiness> {
                       MaterialPageRoute(
                           builder: (context) => ReviewScreenFixed(
                               reviews: doc.data['reviews']
-                                  .map<Review>((document) => new Review(
-                                      stars: document['stars'],
-                                      who: document['who'],
-                                      text: document['text']))
+                                  .map<Review>((document) =>
+                                      new Review(document: document))
                                   .toList()))),
                   child:
                       Text('Reviews', style: TextStyle(color: Colors.orange)),

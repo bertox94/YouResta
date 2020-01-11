@@ -5,6 +5,8 @@ import 'package:youresta/model/custom_user.dart';
 import 'package:youresta/model/dish.dart';
 import 'package:youresta/model/review.dart';
 
+import 'commons.dart';
+
 class ReviewScreenEditable extends StatefulWidget {
   final Dish dish;
   final String user;
@@ -16,7 +18,9 @@ class ReviewScreenEditable extends StatefulWidget {
 }
 
 class _ReviewScreenEditableState extends State<ReviewScreenEditable> {
-  Review review = new Review(stars: 0);
+  Review review = new Review();
+  final formKey = GlobalKey<FormState>();
+  String error = '';
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +99,7 @@ class _ReviewScreenEditableState extends State<ReviewScreenEditable> {
       return TextFormField(
           keyboardType: TextInputType.multiline,
           maxLines: null,
-          validator: (val) => val.isEmpty ? 'Enter an email' : null,
+          validator: (val) => val.isEmpty ? 'Enter a description' : null,
           onChanged: (val) {
             setState(() => review.text = val);
           },
@@ -112,8 +116,8 @@ class _ReviewScreenEditableState extends State<ReviewScreenEditable> {
     }
 
     void saveReview() async {
-
       review.who = widget.user;
+      review.when = Timestamp.now();
 
       int selected;
       for (int i = 0; i < widget.dish.reviews.length; i++) {
@@ -134,6 +138,7 @@ class _ReviewScreenEditableState extends State<ReviewScreenEditable> {
         map['who'] = widget.dish.reviews.elementAt(i).who;
         map['stars'] = widget.dish.reviews.elementAt(i).stars;
         map['text'] = widget.dish.reviews.elementAt(i).text;
+        map['when'] = widget.dish.reviews.elementAt(i).when;
         list.add(map);
       }
 
@@ -145,76 +150,42 @@ class _ReviewScreenEditableState extends State<ReviewScreenEditable> {
       });
     }
 
-    Padding buildNewReview() {
-      return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(children: <Widget>[
-            build4(),
-            build5(),
-            Container(
-              margin: EdgeInsets.all(8),
-              child: FlatButton(
-                onPressed: () {
-                  saveReview();
-                  Navigator.pop(context);
-                },
-                color: Colors.orange,
-                child: Text('Save', style: TextStyle(color: Colors.white)),
-              ),
-            )
-          ]));
-    }
-
-    Row buildDisplayRow(Review review) {
-      IconTheme star = IconTheme(
-        data: IconThemeData(
-          color: Colors.orange,
-          size: 25,
-        ),
-        child: new Icon(Icons.star),
-      );
-
-      List<Widget> list = new List();
-
-      int i = 0;
-
-      for (; i < review.stars; i++) {
-        list.add(star);
-      }
-
-      return Row(children: list);
-    }
-
-    Card buildItem(Review review) {
-      return Card(
-        margin: EdgeInsets.all(10.0),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              buildDisplayRow(review),
-              Row(
-                children: <Widget>[
-                  Text(
-                    'desc: ${review.who}',
-                    style: TextStyle(fontSize: 20),
+    Form buildNewReview() {
+      return Form(
+          key: formKey,
+          child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(children: <Widget>[
+                build4(),
+                build5(),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  error,
+                  style: TextStyle(color: Colors.red, fontSize: 14.0),
+                ),
+                Container(
+                  margin: EdgeInsets.all(8),
+                  child: FlatButton(
+                    onPressed: () {
+                      if (formKey.currentState.validate()) {
+                        formKey.currentState.save();
+                        if (review.stars != 0) {
+                          saveReview();
+                          Navigator.pop(context);
+                        } else {
+                          setState(() {
+                            error = 'Must give at least 1 star.';
+                          });
+                        }
+                      }
+                    },
+                    color: Colors.orange,
+                    child: Text('Save', style: TextStyle(color: Colors.white)),
                   ),
-                ],
-              ),
-              Row(
-                children: <Widget>[
-                  Text(
-                    'cost: ${review.text}€',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ],
-              ),
-              SizedBox(height: 6),
-            ],
-          ),
-        ),
-      );
+                )
+              ])));
     }
 
     return Scaffold(
@@ -225,9 +196,11 @@ class _ReviewScreenEditableState extends State<ReviewScreenEditable> {
         body: ListView(
           children: <Widget>[
             Column(
+
                 //padding: EdgeInsets.all(8),
-                children:
-                    widget.dish.reviews.map((doc) => buildItem(doc)).toList()),
+                children: widget.dish.reviews
+                    .map((doc) => Commons.buildReview(doc))
+                    .toList()),
             buildNewReview(),
           ],
         ));

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 import 'model/review.dart';
 
@@ -212,11 +213,12 @@ class Commons {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              '${review.who}:',
+              '${review.who}',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(
-              height: 8,
+            Text(
+              'on ${DateFormat('dd-MM-yyyy').format(review.when.toDate())}:',
+              style: TextStyle(fontSize: 20, fontStyle: FontStyle.italic),
             ),
             buildDisplayStars(review.stars.toDouble()),
             SizedBox(
@@ -245,13 +247,23 @@ class Commons {
       ),
       child: new Icon(Icons.star),
     );
+    IconTheme halfStar = IconTheme(
+      data: IconThemeData(
+        color: Colors.orange,
+        size: 25,
+      ),
+      child: new Icon(Icons.star),
+    );
+
     List<Widget> list = new List();
 
     int i = 0;
 
-    for (; i < stars; i++) {
+    for (; i < stars.toInt(); i++) {
       list.add(star);
     }
+
+    if (stars > stars.toInt()) list.add(halfStar);
 
     return Row(children: list);
   }
@@ -261,6 +273,6 @@ class Commons {
     for (Review review in reviews) {
       amount += review.stars;
     }
-    return amount / reviews.length;
+    return (reviews.isEmpty ? 0 : amount / reviews.length);
   }
 }

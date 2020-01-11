@@ -48,10 +48,8 @@ class HomeCustomerState extends State<HomeCustomer> {
                           context, doc, '', 'name', '', 26, true, false),
                       Commons.buildDisplayStars(Commons.averageStars(doc
                           .data['reviews']
-                          .map<Review>((document) => new Review(
-                              stars: document['stars'],
-                              who: document['who'],
-                              text: document['text']))
+                          .map<Review>(
+                              (document) => new Review(document: document))
                           .toList())),
                       SizedBox(
                         height: 6,
@@ -65,7 +63,7 @@ class HomeCustomerState extends State<HomeCustomer> {
                       Commons.buildTextField(context, doc, 'Ingredients: ',
                           'ingredients', '', 20, false, false),
                       Commons.buildTextField(
-                          context, doc, 'Owner', 'owner', '', 20, false, false),
+                          context, doc, 'Owner: ', 'owner', '', 20, false, false),
                     ],
                   ),
                 ),
@@ -99,10 +97,8 @@ class HomeCustomerState extends State<HomeCustomer> {
                                 dish: new Dish(
                                     uid: doc.data['uid'],
                                     reviews: doc.data['reviews']
-                                        .map<Review>((document) => new Review(
-                                            stars: document['stars'],
-                                            who: document['who'],
-                                            text: document['text']))
+                                        .map<Review>((document) =>
+                                            new Review(document: document))
                                         .toList()))));
                   },
                   child:

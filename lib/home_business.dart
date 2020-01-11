@@ -94,7 +94,7 @@ class HomeBusinessState extends State<HomeBusiness> {
                   onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => FixedReviewScreen(
+                          builder: (context) => ReviewScreenFixed(
                               reviews: doc.data['reviews']
                                   .map<Review>((document) => new Review(
                                       stars: document['stars'],

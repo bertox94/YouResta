@@ -100,7 +100,9 @@ class _RegisterState extends State<Register> {
                     Checkbox(
                       value: isBusiness,
                       onChanged: (bool value) {
-                        isBusiness = value;
+                        setState(() {
+                          isBusiness = value;
+                        });
                       },
                     ),
                     Text(

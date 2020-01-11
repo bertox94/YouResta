@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'model/review.dart';
+
 class Commons {
   static TextFormField buildEmail(Function onChanged) {
     return TextFormField(
@@ -52,7 +54,7 @@ class Commons {
         onChanged: onChanged,
         obscureText: false,
         style: TextStyle(
-            fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white),
+            fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.black),
         decoration: InputDecoration(
           icon: new Icon(Icons.edit),
           //contentPadding: EdgeInsets.fromLTRB(10.0, 15.0, 20.0, 15.0),
@@ -72,7 +74,7 @@ class Commons {
         onChanged: onChanged,
         obscureText: false,
         style: TextStyle(
-            fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white),
+            fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.black),
         decoration: InputDecoration(
           icon: new Icon(Icons.invert_colors),
           hintText: 'Allergens',
@@ -90,7 +92,7 @@ class Commons {
         onChanged: onChanged,
         obscureText: false,
         style: TextStyle(
-            fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white),
+            fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.black),
         decoration: InputDecoration(
           icon: new Icon(Icons.description),
           //contentPadding: EdgeInsets.fromLTRB(10.0, 15.0, 20.0, 15.0),
@@ -110,7 +112,7 @@ class Commons {
         onChanged: onChanged,
         obscureText: false,
         style: TextStyle(
-            fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white),
+            fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.black),
         decoration: InputDecoration(
           icon: new Icon(Icons.list),
           //contentPadding: EdgeInsets.fromLTRB(10.0, 15.0, 20.0, 15.0),
@@ -133,7 +135,7 @@ class Commons {
         onChanged: onChanged,
         obscureText: false,
         style: TextStyle(
-            fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white),
+            fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.black),
         decoration: InputDecoration(
           icon: new Icon(Icons.euro_symbol),
           hintText: 'Price',
@@ -148,8 +150,15 @@ class Commons {
     );
   }
 
-  static Container buildTextField(BuildContext context, DocumentSnapshot doc,
-      String arg1, String arg2, String arg3, bool required, bool detailScreen) {
+  static Container buildTextField(
+      BuildContext context,
+      DocumentSnapshot doc,
+      String arg1,
+      String arg2,
+      String arg3,
+      double size,
+      bool required,
+      bool detailScreen) {
     Orientation orientation = MediaQuery.of(context).orientation;
 
     if (!detailScreen && orientation == Orientation.portrait) {
@@ -157,11 +166,11 @@ class Commons {
         return Container(
           width: MediaQuery.of(context).size.width * 0.65,
           child: Text(
-            '$arg1: ${doc.data[arg2]}$arg3',
+            '$arg1${doc.data[arg2]}$arg3',
             maxLines: 1,
             softWrap: false,
             overflow: TextOverflow.fade,
-            style: TextStyle(fontSize: 20),
+            style: TextStyle(fontSize: size),
           ),
         );
       } else
@@ -173,24 +182,85 @@ class Commons {
       return Container(
         width: MediaQuery.of(context).size.width * 0.65,
         child: Text(
-          '$arg1: ${doc.data[arg2]}$arg3',
+          '$arg1${doc.data[arg2]}$arg3',
           maxLines: null,
           softWrap: true,
           overflow: null,
-          style: TextStyle(fontSize: 20),
+          style: TextStyle(fontSize: size),
         ),
       );
     } else {
       return Container(
         width: MediaQuery.of(context).size.width * 0.65,
         child: Text(
-          '$arg1: ${doc.data[arg2]}$arg3',
+          '$arg1${doc.data[arg2]}$arg3',
           maxLines: null,
           softWrap: true,
           overflow: null,
-          style: TextStyle(fontSize: 20),
+          style: TextStyle(fontSize: size),
         ),
       );
     }
+  }
+
+  static Card buildReview(Review review) {
+    return Card(
+      margin: EdgeInsets.all(10.0),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              '${review.who}:',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            buildDisplayStars(review.stars.toDouble()),
+            SizedBox(
+              height: 2,
+            ),
+            Row(
+              children: <Widget>[
+                Text(
+                  '${review.text}',
+                  style: TextStyle(fontSize: 20),
+                ),
+              ],
+            ),
+            SizedBox(height: 6),
+          ],
+        ),
+      ),
+    );
+  }
+
+  static Row buildDisplayStars(double stars) {
+    IconTheme star = IconTheme(
+      data: IconThemeData(
+        color: Colors.orange,
+        size: 25,
+      ),
+      child: new Icon(Icons.star),
+    );
+    List<Widget> list = new List();
+
+    int i = 0;
+
+    for (; i < stars; i++) {
+      list.add(star);
+    }
+
+    return Row(children: list);
+  }
+
+  static double averageStars(List reviews) {
+    double amount = 0;
+    for (Review review in reviews) {
+      amount += review.stars;
+    }
+    return amount / reviews.length;
   }
 }

@@ -72,16 +72,23 @@ class HomeBusinessState extends State<HomeBusiness> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Commons.buildTextField(
-                          context, doc, 'Name', 'name', '', true, false),
-                      Commons.buildTextField(
-                          context, doc, 'Price', 'price', '€', true, false),
-                      Commons.buildTextField(context, doc, 'Allergens',
-                          'allergens', '', true, false),
-                      Commons.buildTextField(context, doc, 'Description',
-                          'description', '', false, false),
-                      Commons.buildTextField(context, doc, 'Ingredients',
-                          'ingredients', '', false, false),
-                      SizedBox(height: 6),
+                          context, doc, '', 'name', '', 26, true, false),
+                      Commons.buildDisplayStars(Commons.averageStars(doc
+                          .data['reviews']
+                          .map<Review>((document) => new Review(
+                              stars: document['stars'],
+                              who: document['who'],
+                              text: document['text']))
+                          .toList())),
+                      SizedBox(height: 6,),
+                      Commons.buildTextField(context, doc, 'Price: ', 'price',
+                          '€', 20, true, false),
+                      Commons.buildTextField(context, doc, 'Allergens: ',
+                          'allergens', '', 20, true, false),
+                      Commons.buildTextField(context, doc, 'Description: ',
+                          'description', '', 20, false, false),
+                      Commons.buildTextField(context, doc, 'Ingredients: ',
+                          'ingredients', '', 20, false, false),
                     ],
                   ),
                 ),
@@ -112,7 +119,11 @@ class HomeBusinessState extends State<HomeBusiness> {
                         MaterialPageRoute(
                             builder: (context) => UpdateDish(oldDish: doc)));
                   },
-                  child: Text('Update/Detail',
+                  child: Text(
+                      (MediaQuery.of(context).orientation ==
+                              Orientation.portrait
+                          ? 'Update/Detail'
+                          : 'Update'),
                       style: TextStyle(color: Colors.orange)),
                   //color: Colors.green,
                 ),

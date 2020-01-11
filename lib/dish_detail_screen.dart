@@ -30,18 +30,27 @@ class DishDetailScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Commons.buildTextField(
-                            context, doc, 'Name', 'name', '', true, true),
+                            context, doc, '', 'name', '', 26, true, true),
+                        Commons.buildDisplayStars(Commons.averageStars(doc
+                            .data['reviews']
+                            .map<Review>((document) => new Review(
+                                stars: document['stars'],
+                                who: document['who'],
+                                text: document['text']))
+                            .toList())),
+                        SizedBox(
+                          height: 6,
+                        ),
+                        Commons.buildTextField(context, doc, 'Price: ', 'price',
+                            '€', 20, true, true),
+                        Commons.buildTextField(context, doc, 'Allergens: ',
+                            'allergens', '', 20, true, true),
+                        Commons.buildTextField(context, doc, 'Description: ',
+                            'description', '', 20, false, true),
+                        Commons.buildTextField(context, doc, 'Ingredients: ',
+                            'ingredients', '', 20, false, true),
                         Commons.buildTextField(
-                            context, doc, 'Price', 'price', '€', true, true),
-                        Commons.buildTextField(context, doc, 'Allergens',
-                            'allergens', '', true, true),
-                        Commons.buildTextField(context, doc, 'Description',
-                            'description', '', true, true),
-                        Commons.buildTextField(context, doc, 'Ingredients',
-                            'ingredients', '', true, true),
-                        Commons.buildTextField(
-                            context, doc, 'Owner', 'owner', '', true, true),
-                        SizedBox(height: 6),
+                            context, doc, 'Owner', 'owner', '', 20, false, false),
                       ],
                     ),
                   ),

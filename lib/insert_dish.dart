@@ -101,8 +101,11 @@ class InsertDishState extends State<InsertDish> {
                             backgroundColor: Colors.deepOrange,
                             elevation: 5,
                             onPressed: () {
-                              createData();
-                              Navigator.pop(context);
+                              if (formKey.currentState.validate()) {
+                                formKey.currentState.save();
+                                createData();
+                                Navigator.pop(context);
+                              }
                             },
                             child: new Icon(Icons.add),
                           ),
@@ -112,25 +115,22 @@ class InsertDishState extends State<InsertDish> {
   }
 
   void createData() async {
-    if (formKey.currentState.validate()) {
-      formKey.currentState.save();
-      DocumentReference ref =
-          await Firestore.instance.collection('dishes').add({});
+    DocumentReference ref =
+        await Firestore.instance.collection('dishes').add({});
 
-      await Firestore.instance
-          .collection('dishes')
-          .document(ref.documentID)
-          .updateData({
-        'uid': ref.documentID,
-        'allergens': dish.allergens,
-        'price': dish.price,
-        'description': dish.description,
-        'picture': 'chef-hat-${1 + Random().nextInt(9)}.jpg',
-        'name': dish.name,
-        'ingredients': dish.ingredients,
-        'owner': widget.user.name,
-        'reviews': new List<Review>(),
-      });
-    }
+    await Firestore.instance
+        .collection('dishes')
+        .document(ref.documentID)
+        .updateData({
+      'uid': ref.documentID,
+      'allergens': dish.allergens,
+      'price': dish.price,
+      'description': dish.description,
+      'picture': 'chef-hat-${1 + Random().nextInt(9)}.jpg',
+      'name': dish.name,
+      'ingredients': dish.ingredients,
+      'owner': widget.user.name,
+      'reviews': new List<Review>(),
+    });
   }
 }

@@ -252,7 +252,7 @@ class Commons {
         color: Colors.orange,
         size: 25,
       ),
-      child: new Icon(Icons.star),
+      child: new Icon(Icons.star_half),
     );
 
     List<Widget> list = new List();
@@ -263,7 +263,12 @@ class Commons {
       list.add(star);
     }
 
-    if (stars > stars.toInt()) list.add(halfStar);
+    if (stars - stars.toInt() != 0) {
+      if (stars - stars.toInt() < 0.5)
+        list.add(halfStar);
+      else
+        list.add(star);
+    }
 
     return Row(children: list);
   }

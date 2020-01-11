@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:youresta/authenticate.dart';
 import 'package:flutter/material.dart';
+import 'package:youresta/authenticate.dart';
 import 'package:youresta/home_customer.dart';
 
 import 'home_business.dart';
@@ -21,7 +21,7 @@ class Wrapper extends StatelessWidget {
               stream: Firestore.instance.collection('custom_users').snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  CustomUser customUser = snapshot.data.documents
+                  List<CustomUser> list = snapshot.data.documents
                       .where((x) =>
                           (x.data['uid'].trim().compareTo(fUser.uid.trim())) ==
                                   0
@@ -30,8 +30,11 @@ class Wrapper extends StatelessWidget {
                       .map((doc) => new CustomUser(
                           isBusiness: doc.data['isBusiness'],
                           uid: doc.data['uid'],
-                          name: doc.data['name']))
-                      .first;
+                          name: doc.data['name'])).toList();
+
+                  if (list.isEmpty) return Loading();
+
+                  CustomUser customUser = list.elementAt(0);
 
                   if (customUser != null) {
                     if (customUser.isBusiness) {

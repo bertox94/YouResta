@@ -183,8 +183,10 @@ class HomeCustomerState extends State<HomeCustomer> {
                 }
               },
             ),
-            Padding(
-              padding: EdgeInsets.all(8),
+            Card(
+              margin: EdgeInsets.all(8),
+              color: Colors.blue[100],
+              //padding: EdgeInsets.all(8),
               child: TextField(
                   onChanged: (val) {
                     setState(() {
@@ -192,6 +194,7 @@ class HomeCustomerState extends State<HomeCustomer> {
                     });
                   },
                   decoration: InputDecoration(
+                    filled: true,
                     fillColor: Colors.blue[100],
                     icon: new Icon(Icons.text_fields),
                     //contentPadding: EdgeInsets.fromLTRB(10.0, 15.0, 20.0, 15.0),

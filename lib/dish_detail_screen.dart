@@ -43,13 +43,14 @@ class DishDetailScreen extends StatelessWidget {
                             'allergens', '', 20, true, true),
                         Commons.buildTextField(context, doc, 'Ingredients: ',
                             'ingredients', '', 20, false, true),
+                        Commons.buildTextField(context, doc, 'Owner: ', 'owner',
+                            '', 20, false, true),
                         SizedBox(
                           height: 6,
                         ),
                         Commons.buildTextField(context, doc, '', 'description',
                             '', 20, false, true),
-                        Commons.buildTextField(context, doc, 'Owner', 'owner',
-                            '', 20, false, false),
+
                       ],
                     ),
                   ),

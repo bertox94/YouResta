@@ -27,10 +27,11 @@ class HomeCustomer extends StatefulWidget {
 
 class HomeCustomerState extends State<HomeCustomer> {
   final AuthService _auth = AuthService();
+  String title = '';
 
   Card buildItem(DocumentSnapshot doc) {
     return Card(
-        margin: const EdgeInsets.all(8.0),
+        margin: const EdgeInsets.all(10.0),
         child: Column(
           children: <Widget>[
             Row(
@@ -62,8 +63,8 @@ class HomeCustomerState extends State<HomeCustomer> {
                           'description', '', 20, false, false),
                       Commons.buildTextField(context, doc, 'Ingredients: ',
                           'ingredients', '', 20, false, false),
-                      Commons.buildTextField(
-                          context, doc, 'Owner: ', 'owner', '', 20, false, false),
+                      Commons.buildTextField(context, doc, 'Owner: ', 'owner',
+                          '', 20, false, false),
                     ],
                   ),
                 ),
@@ -157,19 +158,42 @@ class HomeCustomerState extends State<HomeCustomer> {
             ),
           ],
         ),
-        body: StreamBuilder<QuerySnapshot>(
-          stream: Firestore.instance.collection('dishes').snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return ListView(
-                  padding: EdgeInsets.all(8),
-                  children: snapshot.data.documents
-                      .map((doc) => buildItem(doc))
-                      .toList());
-            } else {
-              return SizedBox();
-            }
-          },
+        body: ListView(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(8),
+              child: TextField(
+                  onChanged: (val) {
+                    setState(() {
+                      title = val;
+                    });
+                  },
+                  decoration: InputDecoration(
+                    icon: new Icon(Icons.text_fields),
+                    //contentPadding: EdgeInsets.fromLTRB(10.0, 15.0, 20.0, 15.0),
+                    hintText: 'Search you dish here...',
+                    hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
+                    //border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+                  )),
+            ),
+            StreamBuilder<QuerySnapshot>(
+              stream: Firestore.instance.collection('dishes').snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Column(
+                      //padding: EdgeInsets.all(8),
+                      children: snapshot.data.documents
+                          .where((x) => x['name']
+                              .toLowerCase()
+                              .contains(title.toLowerCase()))
+                          .map((doc) => buildItem(doc))
+                          .toList());
+                } else {
+                  return SizedBox();
+                }
+              },
+            )
+          ],
         ));
   }
 }

@@ -26,6 +26,7 @@ class HomeBusinessState extends State<HomeBusiness> {
   final AuthService _auth = AuthService();
   String name;
   int randomNumber = -1;
+  String title = '';
 
   dynamic buildAdditional1(DocumentSnapshot doc, var deviceData) {
     if (deviceData.orientation == Orientation.landscape) {
@@ -55,7 +56,7 @@ class HomeBusinessState extends State<HomeBusiness> {
     }
   }
 
-  Card buildItem(DocumentSnapshot doc, var deviceData) {
+  Card buildItem(DocumentSnapshot doc) {
     return Card(
         margin: const EdgeInsets.all(8.0),
         child: Column(
@@ -177,22 +178,44 @@ class HomeBusinessState extends State<HomeBusiness> {
             ),
           ],
         ),
-        body: StreamBuilder<QuerySnapshot>(
-          stream: Firestore.instance
-              .collection('dishes')
-              .where('owner', isEqualTo: widget.user.name)
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return ListView(
-                  padding: EdgeInsets.all(8),
-                  children: snapshot.data.documents
-                      .map((doc) => buildItem(doc, deviceData))
-                      .toList());
-            } else {
-              return SizedBox();
-            }
-          },
+        body: ListView(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(8),
+              child: TextField(
+                  onChanged: (val) {
+                    setState(() {
+                      title = val;
+                    });
+                  },
+                  decoration: InputDecoration(
+                    icon: new Icon(Icons.text_fields),
+                    //contentPadding: EdgeInsets.fromLTRB(10.0, 15.0, 20.0, 15.0),
+                    hintText: 'Search you dish here...',
+                    hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
+                    //border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+                  )),
+            ),
+            StreamBuilder<QuerySnapshot>(
+              stream: Firestore.instance
+                  .collection('dishes')
+                  .where('owner', isEqualTo: widget.user.name)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Column(
+                      children: snapshot.data.documents
+                          .where((x) => x['name']
+                              .toLowerCase()
+                              .contains(title.toLowerCase()))
+                          .map((doc) => buildItem(doc))
+                          .toList());
+                } else {
+                  return SizedBox();
+                }
+              },
+            )
+          ],
         ));
   }
 

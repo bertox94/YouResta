@@ -1,7 +1,7 @@
 import 'dart:collection';
-import 'package:flutter/material.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:youresta/model/custom_user.dart';
+import 'package:flutter/material.dart';
 import 'package:youresta/model/dish.dart';
 import 'package:youresta/model/review.dart';
 
@@ -169,16 +169,22 @@ class _ReviewScreenEditableState extends State<ReviewScreenEditable> {
                   margin: EdgeInsets.all(8),
                   child: FlatButton(
                     onPressed: () {
+                      bool f1 = false;
+                      bool f2 = false;
                       if (formKey.currentState.validate()) {
                         formKey.currentState.save();
-                        if (review.stars != 0) {
-                          saveReview();
-                          Navigator.pop(context);
-                        } else {
-                          setState(() {
-                            error = 'Must give at least 1 star.';
-                          });
-                        }
+                        f1 = true;
+                      }
+                      if (review.stars != 0) {
+                        f2 = true;
+                      } else {
+                        setState(() {
+                          error = 'Must give at least 1 star.';
+                        });
+                      }
+                      if (f1 && f2) {
+                        saveReview();
+                        Navigator.pop(context);
                       }
                     },
                     color: Colors.orange,

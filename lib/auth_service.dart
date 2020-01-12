@@ -31,7 +31,6 @@ class AuthService {
   dynamic registerWithEmailAndPassword(
       String email, String password, String name, bool isBusiness) async {
     try {
-      _auth.signOut();
       AuthResult result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = result.user;

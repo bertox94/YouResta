@@ -2,7 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  static final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  static Future standardSignIn() async {
+    try {
+      return await _auth.signInWithEmailAndPassword(
+          email: 'standard@youresta.com', password: '1234567890');
+    } catch (error) {
+      print(error.toString());
+      return null;
+    }
+  }
 
   // sign in with email and password
   Future signInWithEmailAndPassword(String email, String password) async {
@@ -21,6 +31,7 @@ class AuthService {
   dynamic registerWithEmailAndPassword(
       String email, String password, String name, bool isBusiness) async {
     try {
+      _auth.signOut();
       AuthResult result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = result.user;

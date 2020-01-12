@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:youresta/authenticate.dart';
 import 'package:youresta/home_customer.dart';
 
+import 'auth_service.dart';
 import 'home_business.dart';
 import 'loading.dart';
 import 'model/custom_user.dart';
@@ -16,7 +17,11 @@ class Wrapper extends StatelessWidget {
       builder: (context, snapshot) {
         FirebaseUser fUser = snapshot.data;
 
-        if (snapshot.hasData) {
+        if (fUser == null) AuthService.standardSignIn();
+
+        if (snapshot.hasData &&
+            fUser != null &&
+            fUser.uid != 'ThGGVmIKBWYzMWSMidygt55KQ783') {
           return StreamBuilder<QuerySnapshot>(
               stream: Firestore.instance.collection('custom_users').snapshots(),
               builder: (context, snapshot) {
@@ -30,7 +35,8 @@ class Wrapper extends StatelessWidget {
                       .map((doc) => new CustomUser(
                           isBusiness: doc.data['isBusiness'],
                           uid: doc.data['uid'],
-                          name: doc.data['name'])).toList();
+                          name: doc.data['name']))
+                      .toList();
 
                   if (list.isEmpty) return Loading();
 

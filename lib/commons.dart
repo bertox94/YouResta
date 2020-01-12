@@ -12,6 +12,7 @@ class Commons {
           if (val.isEmpty) return 'Enter an email';
           if (!val.contains("@") || !val.contains("."))
             return 'Email badly formatted';
+          if (val == 'standard@youresta.com') return 'Cannot use this email';
           return null;
         },
         onChanged: onChanged,

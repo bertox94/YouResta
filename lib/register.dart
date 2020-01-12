@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:youresta/model/custom_user.dart';
-import 'package:youresta/model/dish.dart';
+import 'package:flutter/material.dart';
 import 'package:youresta/auth_service.dart';
 import 'package:youresta/loading.dart';
-import 'package:flutter/material.dart';
 
 import 'commons.dart';
 
@@ -40,7 +38,6 @@ class _RegisterState extends State<Register> {
                   if (value == '') {
                     return 'The name must not be empty';
                   }
-                  //eventually register temporarily, or register everyone and add a field in firestore: valid_account, to be checked before login
                   if (snapshot.data.documents.any((x) => (x.data['name']
                               .toString()
                               .trim()

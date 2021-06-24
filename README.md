@@ -1,1 +1,2 @@
-Give a look here --> https://github.com/bertox94/YouResta/raw/master/Presentation.mp4
+Presentation video:
+https://github.com/bertox94/YouResta/raw/master/Presentation.mp4
